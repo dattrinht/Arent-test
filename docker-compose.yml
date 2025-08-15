@@ -1,0 +1,52 @@
+services:
+
+  api:
+    build:
+      context: .
+      dockerfile: src/HealthApp.Api/Dockerfile
+    container_name: healthapp-api
+    profiles: [all, api]
+    ports:
+      - "5292:8080"
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    image: postgres:17
+    container_name: healthapp-postgres
+    profiles: [all, postgres]
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7
+    container_name: healthapp-redis
+    profiles: [all, redis]
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  postgres_data:
+  redis_data:
