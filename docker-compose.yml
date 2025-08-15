@@ -6,6 +6,9 @@ services:
       dockerfile: src/HealthApp.Api/Dockerfile
     container_name: healthapp-api
     profiles: [all, api]
+    restart: unless-stopped
+    environment:
+        ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
     ports:
       - "5292:8080"
     depends_on:

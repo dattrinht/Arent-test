@@ -1,0 +1,11 @@
+﻿global using HealthApp.Domain.Models.AuthModels;
+global using HealthApp.Infrastructure.EntityConfigurations;
+global using HealthApp.Infrastructure.Repositories;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore.Metadata.Builders;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
+global using RedLockNet;
+global using RedLockNet.SERedis;
+global using RedLockNet.SERedis.Configuration;
+global using StackExchange.Redis;

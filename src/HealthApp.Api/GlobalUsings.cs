@@ -1,0 +1,10 @@
+﻿global using HealthApp.Api;
+global using HealthApp.Application;
+global using HealthApp.Application.Auth;
+global using HealthApp.Application.Auth.Models;
+global using HealthApp.Infrastructure;
+global using Microsoft.AspNetCore.Authentication.JwtBearer;
+global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.IdentityModel.Tokens;
+global using System.Text;

@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="IdGen" Version="3.0.7" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.13.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.13.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\HealthApp.Domain\HealthApp.Domain.csproj" />
   </ItemGroup>
 
