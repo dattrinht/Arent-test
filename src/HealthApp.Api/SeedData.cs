@@ -11,6 +11,7 @@ public static class SeedData
         SeedUserAsync(scope, context).Wait();
         SeedMealsAsync(scope, context).Wait();
         SeedBodyRecordsAsync(scope, context).Wait();
+        SeedDiariesAsync(scope, context).Wait();
     }
 
     public static async Task SeedUserAsync(IServiceScope scope, HealthAppContext context)
@@ -132,5 +133,57 @@ public static class SeedData
         }
 
         Console.WriteLine($"[DbSeeder] {count} body records seeded for profile {profileId}");
+    }
+
+    public static async Task SeedDiariesAsync(IServiceScope scope, HealthAppContext context)
+    {
+        if (await context.Diaries.AnyAsync()) return;
+
+        var diaryService = scope.ServiceProvider.GetRequiredService<IDiaryService>();
+        var profile = await context.Profiles.FirstAsync();
+        var profileId = profile.Id;
+
+        var rnd = new Random();
+
+        var titles = new[]
+        {
+            "Morning Reflection", "Workout Log", "Daily Gratitude",
+            "Study Notes", "Meal Thoughts", "Evening Recap", "Mood Check"
+        };
+
+        var loremWords = new[]
+        {
+            "lorem", "ipsum", "dolor", "sit", "amet", "consectetur",
+            "adipiscing", "elit", "integer", "nec", "odio", "praesent",
+            "libero", "sed", "cursus", "ante", "dapibus", "diam"
+        };
+
+        string GenerateLorem(int wordCount)
+        {
+            return string.Join(" ", Enumerable.Range(0, wordCount)
+                .Select(_ => loremWords[rnd.Next(loremWords.Length)]));
+        }
+
+        int count = 50;
+        for (int i = 0; i < count; i++)
+        {
+            var title = titles[rnd.Next(titles.Length)];
+
+            var content = $"{title}: {GenerateLorem(rnd.Next(30, 80))}.";
+
+            var dt = DateTime.UtcNow
+                .AddDays(-rnd.Next(0, 180))
+                .AddHours(rnd.Next(0, 24))
+                .AddMinutes(rnd.Next(0, 60));
+
+            await diaryService.CreateAsync(new CreateDiaryRequest(
+                ProfileId: profileId,
+                Title: title,
+                Content: content,
+                WrittenAt: dt
+            ));
+        }
+
+        Console.WriteLine($"[DbSeeder] {count} diaries seeded for profile {profileId}");
     }
 }

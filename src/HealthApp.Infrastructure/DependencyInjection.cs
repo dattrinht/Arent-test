@@ -23,6 +23,7 @@ public static class DependencyInjection
         services.AddScoped<IProfileRepository, ProfileRepository>();
         services.AddScoped<IMealRepository, MealRepository>();
         services.AddScoped<IBodyRecordRepository, BodyRecordRepository>();
+        services.AddScoped<IDiaryRepository, DiaryRepository>();
 
         return services;
     }
