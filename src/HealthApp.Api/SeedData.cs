@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace HealthApp.Api;
+﻿namespace HealthApp.Api;
 
 public static class SeedData
 {
@@ -15,16 +13,18 @@ public static class SeedData
 
     public static async Task SeedUserAsync(IServiceScope scope, HealthAppContext context)
     {
-        if (!await context.Users.AnyAsync())
-        {
-            var authService = scope.ServiceProvider.GetRequiredService<IAuthService>();
+        if (await context.Users.AnyAsync()) return;
 
-            var email = "admin@healthapp.com";
-            var password = "Admin@123";
+        var authService = scope.ServiceProvider.GetRequiredService<IAuthService>();
+        var profileService = scope.ServiceProvider.GetRequiredService<IProfileService>();
 
-            await authService.RegisterAsync(new(email, password));
+        var email = "admin@healthapp.com";
+        var password = "Admin@123";
 
-            Console.WriteLine($"[DbSeeder] Default admin user created: {email}");
-        }
+        var authResponse = await authService.RegisterAsync(new(email, password));
+        Console.WriteLine($"[DbSeeder] Default admin user created: {email}");
+
+        await profileService.CreateProfileAsync(new(authResponse.UserId, "default", "profile", EnumSex.Male));
+        Console.WriteLine($"[DbSeeder] Default profile created");
     }
 }

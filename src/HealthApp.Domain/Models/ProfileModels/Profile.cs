@@ -2,12 +2,29 @@
 
 public class Profile : Entity
 {
+    [Required]
     public long UserId { get; set; }
-    public string FisrtName { get; set; }
-    public string LastName { get; set; }
+
+    [Required]
+    [MaxLength(64)]
+    public required string FirstName { get; set; }
+
+    [Required]
+    [MaxLength(64)]
+    public required string LastName { get; set; }
+
+    [Required]
     public DateOnly Birthday { get; set; }
-    public short Sex { get; set; }
+
+    [Required]
+    public EnumSex Sex { get; set; }
+
+    [Required]
     public DateTime CreatedAt { get; set; }
+
+    [Required]
     public DateTime UpdatedAt { get; set; }
+
+    [Required]
     public bool IsDeleted { get; set; }
 }

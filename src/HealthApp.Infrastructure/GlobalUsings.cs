@@ -1,6 +1,9 @@
-﻿global using HealthApp.Domain.Models.AuthModels;
+﻿global using HealthApp.Domain.Models.IdentityModels;
+global using HealthApp.Domain.Models.ProfileModels;
+global using HealthApp.Domain.Specifications;
 global using HealthApp.Infrastructure.EntityConfigurations;
 global using HealthApp.Infrastructure.Repositories;
+global using HealthApp.Infrastructure.Specifications;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
 global using Microsoft.Extensions.Configuration;

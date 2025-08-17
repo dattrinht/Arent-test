@@ -9,18 +9,18 @@ public class UserRepository : IUserRepository
         _dbContext = dbContext;
     }
 
-    public async Task<User> CreateAsync(User user)
+    public async Task<User> CreateAsync(User user, CancellationToken ct = default)
     {
         _dbContext.Users.Add(user);
-        await _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync(ct);
 
         return user;
     }
 
-    public async Task<User?> FindByEmailAsync(string email)
+    public async Task<User?> FindByEmailAsync(string email, CancellationToken ct = default)
     {
         var user = await _dbContext.Users
-            .FirstOrDefaultAsync(x => x.Email == email);
+            .FirstOrDefaultAsync(x => x.Email == email, ct);
 
         return user;
     }

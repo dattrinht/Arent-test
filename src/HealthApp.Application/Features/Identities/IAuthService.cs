@@ -1,4 +1,4 @@
-﻿namespace HealthApp.Application.Auth;
+﻿namespace HealthApp.Application.Features.Identities;
 
 public interface IAuthService
 {

@@ -1,43 +1,17 @@
-using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
+builder.Services.AddControllers().AddJsonOptions(opt =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "HealthApp API",
-        Version = "v1"
-    });
-
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = "Enter your token."
-    });
-
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
+    opt.JsonSerializerOptions.Converters.Add(new Int64ToStringConverter());
+    opt.JsonSerializerOptions.Converters.Add(new NullableInt64ToStringConverter());
+    opt.JsonSerializerOptions.NumberHandling =
+        JsonNumberHandling.AllowReadingFromString;
 });
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddCustomSwagger();
 
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructure(builder.Configuration);

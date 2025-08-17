@@ -1,6 +1,6 @@
-﻿namespace HealthApp.Domain.Models.DiarieModels;
+﻿namespace HealthApp.Domain.Models.DiaryModels;
 
-public class Diarie : Entity
+public class Diary : Entity
 {
     public long ProfileId { get; set; }
     public string Title { get; set; }

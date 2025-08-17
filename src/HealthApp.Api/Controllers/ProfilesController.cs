@@ -1,0 +1,25 @@
+﻿namespace HealthApp.Api.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+[Authorize]
+public sealed class ProfilesController : ControllerBase
+{
+    private readonly IProfileService _profileService;
+    public ProfilesController(IProfileService profileService)
+    {
+        _profileService = profileService;
+    }
+
+    [HttpGet("{userId:long}")]
+    public async Task<ActionResult<PagingResult<ProfileSummaryDto>>> GetByUser(
+        [FromRoute] long userId,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        CancellationToken ct = default
+    )
+    {
+        var result = await _profileService.FetchProfilesByUserAsync(userId, page, pageSize, ct);
+        return Ok(PagingResult<ProfileSummaryDto>.Create(result.Items, result.TotalCount, page, pageSize));
+    }
+}

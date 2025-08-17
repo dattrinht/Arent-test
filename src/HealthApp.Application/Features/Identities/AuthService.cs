@@ -1,4 +1,4 @@
-﻿namespace HealthApp.Application.Auth;
+﻿namespace HealthApp.Application.Features.Identities;
 
 public class AuthService : IAuthService
 {
@@ -34,7 +34,7 @@ public class AuthService : IAuthService
             UpdatedAt = DateTime.UtcNow
         };
 
-        user = await _userRepository.CreateAsync(user);
+        user = await _userRepository.CreateAsync(user, ct);
 
         var token = CreateToken(user);
         return new AuthResponse(user.Id, user.Email, token);
@@ -43,7 +43,7 @@ public class AuthService : IAuthService
     public async Task<AuthResponse> LoginAsync(AuthRequest req, CancellationToken ct = default)
     {
         var email = req.Email.Trim().ToLowerInvariant();
-        var user = await _userRepository.FindByEmailAsync(email) ?? throw new UnauthorizedAccessException("Invalid email or password.");
+        var user = await _userRepository.FindByEmailAsync(email, ct) ?? throw new UnauthorizedAccessException("Invalid email or password.");
 
         if (!Verify(req.Password, user.PasswordSalt, user.PasswordHash))
             throw new UnauthorizedAccessException("Invalid email or password.");

@@ -1,7 +1,12 @@
-﻿global using HealthApp.Application.Auth;
-global using HealthApp.Application.Auth.Models;
+﻿global using HealthApp.Application.Features.Identities;
+global using HealthApp.Application.Features.Identities.Models;
+global using HealthApp.Application.Features.Profiles;
+global using HealthApp.Application.Features.Profiles.Models;
+global using HealthApp.Application.Features.Profiles.Specifications;
 global using HealthApp.Application.Helpers;
-global using HealthApp.Domain.Models.AuthModels;
+global using HealthApp.Domain.Models.IdentityModels;
+global using HealthApp.Domain.Models.ProfileModels;
+global using HealthApp.Domain.Specifications;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.IdentityModel.Tokens;
 global using System.IdentityModel.Tokens.Jwt;

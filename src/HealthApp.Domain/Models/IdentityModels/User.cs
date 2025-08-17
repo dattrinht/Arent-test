@@ -1,4 +1,4 @@
-﻿namespace HealthApp.Domain.Models.AuthModels;
+﻿namespace HealthApp.Domain.Models.IdentityModels;
 
 public class User : Entity
 {
