@@ -19,7 +19,7 @@ public sealed class MealsController : ControllerBase
     }
 
     [HttpGet("{profileId:long}")]
-    public async Task<ActionResult<PagingResult<MealSummaryDto>>> GetByProfile(
+    public async Task<ActionResult<PagingResult<MealSummaryDto>>> FetchByProfile(
         [FromRoute] long profileId,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20,

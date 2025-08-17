@@ -38,7 +38,12 @@ internal class ProfileService : IProfileService
         return new CreateProfileResponse(profile.UserId, profile.Id);
     }
 
-    public async Task<(IReadOnlyList<ProfileSummaryDto> Items, long TotalCount)> FetchProfilesByUserAsync(long userId, int page, int pageSize, CancellationToken ct = default)
+    public async Task<(IReadOnlyList<ProfileSummaryDto> Items, long TotalCount)> FetchProfilesByUserAsync(
+        long userId,
+        int page,
+        int pageSize,
+        CancellationToken ct = default
+    )
     {
         var spec = new ProfilesByUserIdPagingSpec(userId, page, pageSize);
         return await _profileRepository.FetchByUserIdAsync(spec, ct);

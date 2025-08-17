@@ -1,6 +1,6 @@
 ﻿namespace HealthApp.Infrastructure.Repositories;
 
-public class UserRepository : IUserRepository
+internal class UserRepository : IUserRepository
 {
     private readonly HealthAppContext _dbContext;
 

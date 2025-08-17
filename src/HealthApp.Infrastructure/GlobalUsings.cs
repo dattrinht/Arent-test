@@ -1,4 +1,5 @@
-﻿global using HealthApp.Domain.Models.IdentityModels;
+﻿global using HealthApp.Domain.Models.BodyRecordModels;
+global using HealthApp.Domain.Models.IdentityModels;
 global using HealthApp.Domain.Models.ProfileModels;
 global using HealthApp.Domain.Models.MealModels;
 global using HealthApp.Domain.Specifications;
@@ -9,7 +10,3 @@ global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
-global using RedLockNet;
-global using RedLockNet.SERedis;
-global using RedLockNet.SERedis.Configuration;
-global using StackExchange.Redis;

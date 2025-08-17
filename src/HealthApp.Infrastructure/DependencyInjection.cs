@@ -11,26 +11,18 @@ public static class DependencyInjection
             opt.UseNpgsql(cs);
         });
 
-        services.AddSingleton<IConnectionMultiplexer>(sp =>
+        services.AddStackExchangeRedisCache(options =>
         {
             var cs = configuration.GetConnectionString("Redis")
                      ?? throw new InvalidOperationException("Missing connection string 'Redis'");
-            return ConnectionMultiplexer.Connect(cs);
-        });
-
-        services.AddSingleton<IDistributedLockFactory>(sp =>
-        {
-            var multiplexer = sp.GetRequiredService<IConnectionMultiplexer>();
-            var redlockMultiplexers = new List<RedLockMultiplexer>
-            {
-                new(multiplexer)
-            };
-            return RedLockFactory.Create(redlockMultiplexers);
+            options.Configuration = cs;
+            options.InstanceName = "healthapp:";
         });
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IProfileRepository, ProfileRepository>();
         services.AddScoped<IMealRepository, MealRepository>();
+        services.AddScoped<IBodyRecordRepository, BodyRecordRepository>();
 
         return services;
     }

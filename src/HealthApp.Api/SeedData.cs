@@ -1,6 +1,4 @@
-﻿using HealthApp.Domain.Models.MealModels;
-
-namespace HealthApp.Api;
+﻿namespace HealthApp.Api;
 
 public static class SeedData
 {
@@ -12,6 +10,7 @@ public static class SeedData
 
         SeedUserAsync(scope, context).Wait();
         SeedMealsAsync(scope, context).Wait();
+        SeedBodyRecordsAsync(scope, context).Wait();
     }
 
     public static async Task SeedUserAsync(IServiceScope scope, HealthAppContext context)
@@ -68,7 +67,7 @@ public static class SeedData
         };
 
         static string GetImageFor(string name, IReadOnlyDictionary<string, string> map) =>
-            map.TryGetValue(name, out var url) 
+            map.TryGetValue(name, out var url)
             ? url
             : "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe";
 
@@ -101,5 +100,37 @@ public static class SeedData
         }
 
         Console.WriteLine($"[DbSeeder] {count} random meals seeded for profile {profileId}");
+    }
+
+    public static async Task SeedBodyRecordsAsync(IServiceScope scope, HealthAppContext context)
+    {
+        if (await context.BodyRecords.AnyAsync()) return;
+
+        var service = scope.ServiceProvider.GetRequiredService<IBodyRecordService>();
+        var profile = await context.Profiles.FirstAsync();
+        var profileId = profile.Id;
+
+        var rnd = new Random();
+
+        var count = 50;
+        for (int i = 0; i < count; i++)
+        {
+            var title = "demo";
+            var weight = (float)Math.Round(rnd.NextDouble() * 10, 1);
+            var bodyFat = (float)Math.Round(rnd.NextDouble() * 10, 1);
+
+            var dt = DateTime.UtcNow.Date.AddDays(-rnd.Next(0, 360));
+            var recordedAt = DateOnly.FromDateTime(dt);
+
+            await service.CreateAsync(new CreateBodyRecordRequest(
+                profileId,
+                title,
+                weight,
+                bodyFat,
+                recordedAt
+            ));
+        }
+
+        Console.WriteLine($"[DbSeeder] {count} body records seeded for profile {profileId}");
     }
 }

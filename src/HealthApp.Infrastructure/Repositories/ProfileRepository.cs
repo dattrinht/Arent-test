@@ -1,6 +1,6 @@
 ﻿namespace HealthApp.Infrastructure.Repositories;
 
-public class ProfileRepository : IProfileRepository
+internal class ProfileRepository : IProfileRepository
 {
     private readonly HealthAppContext _dbContext;
 

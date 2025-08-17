@@ -1,6 +1,8 @@
 ﻿global using HealthApp.Api;
 global using HealthApp.Api.Commons;
 global using HealthApp.Application;
+global using HealthApp.Application.Features.BodyRecords;
+global using HealthApp.Application.Features.BodyRecords.Models;
 global using HealthApp.Application.Features.Identities;
 global using HealthApp.Application.Features.Identities.Models;
 global using HealthApp.Application.Features.Meals;
@@ -8,7 +10,9 @@ global using HealthApp.Application.Features.Meals.Models;
 global using HealthApp.Application.Features.Meals.Specifications;
 global using HealthApp.Application.Features.Profiles;
 global using HealthApp.Application.Features.Profiles.Specifications;
+global using HealthApp.Domain.Models.BodyRecordModels.DTOs;
 global using HealthApp.Domain.Models.ProfileModels;
+global using HealthApp.Domain.Models.MealModels;
 global using HealthApp.Infrastructure;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.AspNetCore.Authorization;

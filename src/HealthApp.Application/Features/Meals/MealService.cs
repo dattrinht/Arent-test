@@ -37,7 +37,12 @@ internal class MealService : IMealService
         return new CreateMealResponse(meal.Id, meal.ProfileId);
     }
 
-    public async Task<(IReadOnlyList<MealSummaryDto> Items, long TotalCount)> FetchByProfileAsync(long profileId, int page, int pageSize, CancellationToken ct = default)
+    public async Task<(IReadOnlyList<MealSummaryDto> Items, long TotalCount)> FetchByProfileAsync(
+        long profileId,
+        int page,
+        int pageSize,
+        CancellationToken ct = default
+    )
     {
         var spec = new MealsByProfileIdPagingSpec(profileId, page, pageSize);
         return await _mealRepository.FetchByProfileIdAsync(spec, ct);

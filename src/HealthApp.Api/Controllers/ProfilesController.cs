@@ -12,7 +12,7 @@ public sealed class ProfilesController : ControllerBase
     }
 
     [HttpGet("{userId:long}")]
-    public async Task<ActionResult<PagingResult<ProfileSummaryDto>>> GetByUser(
+    public async Task<ActionResult<PagingResult<ProfileSummaryDto>>> FetchByUser(
         [FromRoute] long userId,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20,

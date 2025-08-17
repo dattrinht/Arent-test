@@ -7,6 +7,8 @@ public static class DependencyInjection
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IProfileService, ProfileService>();
         services.AddScoped<IMealService, MealService>();
+        services.AddScoped<IBodyRecordService, BodyRecordService>();
+        services.AddScoped<IMonthlyAverageCache, MonthlyAverageCache>();
 
         return services;
     }

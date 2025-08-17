@@ -1,6 +1,6 @@
 ﻿namespace HealthApp.Infrastructure.Repositories;
 
-public class MealRepository : IMealRepository
+internal class MealRepository : IMealRepository
 {
     private readonly HealthAppContext _dbContext;
 
