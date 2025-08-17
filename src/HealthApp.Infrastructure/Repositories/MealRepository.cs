@@ -16,6 +16,22 @@ internal class MealRepository : IMealRepository
         return meal;
     }
 
+    public async Task<Meal?> UpdateAsync(MealSummaryDto dto, CancellationToken ct = default)
+    {
+        var entity = await _dbContext.Meals
+            .FirstOrDefaultAsync(d => d.Id == dto.Id, ct);
+        if (entity is null) return null;
+
+        entity.Name = dto.Name?.Trim() ?? string.Empty;
+        entity.Type = dto.Type;
+        entity.Image = dto.Image;
+        entity.DoneAt = dto.DoneAt;
+        entity.UpdatedAt = DateTime.UtcNow;
+
+        await _dbContext.SaveChangesAsync(ct);
+        return entity;
+    }
+
     public async Task<(IReadOnlyList<TResult> Items, long TotalCount)> FetchByProfileIdAsync<TResult>(ISimplePagingSpecification<Meal, TResult> spec, CancellationToken ct = default)
     {
         IQueryable<Meal> baseQuery = _dbContext.Meals;

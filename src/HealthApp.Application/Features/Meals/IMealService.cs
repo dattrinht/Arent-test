@@ -10,5 +10,6 @@ public interface IMealService
         int pageSize,
         CancellationToken ct = default
     );
+    Task<MealSummaryDto?> UpdateAsync(long id, UpdateMealRequest req, CancellationToken ct = default);
     Task<bool> DeleteAsync(long id, CancellationToken ct = default);
 }

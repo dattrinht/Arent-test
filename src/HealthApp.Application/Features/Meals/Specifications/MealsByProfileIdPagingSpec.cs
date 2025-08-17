@@ -1,14 +1,5 @@
 ﻿namespace HealthApp.Application.Features.Meals.Specifications;
 
-public sealed record MealSummaryDto(
-    long Id,
-    long ProfileId,
-    string? Name,
-    EnumMealType Type,
-    string? Image,
-    DateTime DoneAt
-);
-
 public sealed class MealsByProfileIdPagingSpec
     : SimplePagingSpecification<Meal, MealSummaryDto>
 {

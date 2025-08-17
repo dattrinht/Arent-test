@@ -18,9 +18,9 @@ public sealed class MealsController : ControllerBase
         return result;
     }
 
-    [HttpGet("{profileId:long}")]
+    [HttpGet("fetch")]
     public async Task<ActionResult<PagingResult<MealSummaryDto>>> FetchByProfile(
-        [FromRoute] long profileId,
+        [FromQuery] long profileId,
         [FromQuery] EnumMealType? type,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20,
@@ -29,6 +29,13 @@ public sealed class MealsController : ControllerBase
     {
         var result = await _mealService.FetchByProfileAsync(profileId, type, page, pageSize, ct);
         return PagingResult<MealSummaryDto>.Create(result.Items, result.TotalCount, page, pageSize);
+    }
+
+    [HttpPut("{id:long}")]
+    public async Task<ActionResult<MealSummaryDto>> Update([FromRoute] long id, [FromBody] UpdateMealRequest body, CancellationToken ct)
+    {
+        var result = await _mealService.UpdateAsync(id, body, ct);
+        return result is null ? NotFound() : result;
     }
 
     [HttpDelete("{id:long}")]

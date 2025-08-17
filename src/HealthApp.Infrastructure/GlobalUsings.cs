@@ -5,6 +5,7 @@ global using HealthApp.Domain.Models.DiaryModels.DTOs;
 global using HealthApp.Domain.Models.IdentityModels;
 global using HealthApp.Domain.Models.ProfileModels;
 global using HealthApp.Domain.Models.MealModels;
+global using HealthApp.Domain.Models.MealModels.DTOs;
 global using HealthApp.Domain.Specifications;
 global using HealthApp.Infrastructure.EntityConfigurations;
 global using HealthApp.Infrastructure.Repositories;
