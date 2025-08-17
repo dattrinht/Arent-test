@@ -17,16 +17,16 @@ internal class DiaryRepository : IDiaryRepository
         return diary;
     }
 
-    public async Task<Diary?> UpdateAsync(Diary diary, CancellationToken ct = default)
+    public async Task<Diary?> UpdateAsync(DiaryDetailDto dto, CancellationToken ct = default)
     {
         var entity = await _dbContext.Diaries
-            .FirstOrDefaultAsync(d => d.Id == diary.Id, ct);
+            .FirstOrDefaultAsync(d => d.Id == dto.Id, ct);
         if (entity is null) return null;
 
-        entity.Title = diary.Title?.Trim() ?? string.Empty;
-        entity.Content = diary.Content ?? string.Empty;
+        entity.Title = dto.Title?.Trim() ?? string.Empty;
+        entity.Content = dto.Content ?? string.Empty;
         entity.Preview = GeneratePreview(entity.Content);
-        entity.WrittenAt = diary.WrittenAt;
+        entity.WrittenAt = dto.WrittenAt;
         entity.UpdatedAt = DateTime.UtcNow;
 
         await _dbContext.SaveChangesAsync(ct);

@@ -5,7 +5,6 @@ global using HealthApp.Application.Features.BodyRecords;
 global using HealthApp.Application.Features.BodyRecords.Models;
 global using HealthApp.Application.Features.Diaries;
 global using HealthApp.Application.Features.Diaries.Models;
-global using HealthApp.Application.Features.Diaries.Models.DTOs;
 global using HealthApp.Application.Features.Identities;
 global using HealthApp.Application.Features.Identities.Models;
 global using HealthApp.Application.Features.Meals;

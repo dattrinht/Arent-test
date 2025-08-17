@@ -20,6 +20,13 @@ public sealed class BodyRecordsController : ControllerBase
         return result;
     }
 
+    [HttpPut("{id:long}")]
+    public async Task<ActionResult<BodyRecordSummaryDto>> Update([FromRoute] long id, [FromBody] UpdateBodyRecordRequest body, CancellationToken ct)
+    {
+        var result = await _bodyRecordSerivce.UpdateAsync(id, body, ct);
+        return result is null ? NotFound() : result;
+    }
+
     [HttpDelete("{id:long}")]
     public async Task<ActionResult<bool>> Delete([FromRoute] long id, CancellationToken ct)
     {
@@ -27,9 +34,9 @@ public sealed class BodyRecordsController : ControllerBase
         return result;
     }
 
-    [HttpGet("{profileId:long}/monthly-averages")]
+    [HttpGet("monthly-averages")]
     public async Task<ActionResult<IReadOnlyList<BodyRecordMonthlyAggregateDto>>> FetchMonthlyAverages(
-        [FromRoute] long profileId,
+        [FromQuery] long profileId,
         [FromQuery] string? fromMonth,
         [FromQuery] string? toMonth,
         CancellationToken ct = default

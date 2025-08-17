@@ -1,7 +1,4 @@
-﻿using HealthApp.Application.Features.Diaries.Models.DTOs;
-using HealthApp.Application.Features.Diaries.Specifications;
-
-namespace HealthApp.Application.Features.Diaries;
+﻿namespace HealthApp.Application.Features.Diaries;
 
 public interface IDiaryService
 {

@@ -1,6 +1,4 @@
-﻿using HealthApp.Domain.Models.BodyRecordModels.DTOs;
-
-namespace HealthApp.Infrastructure.Repositories;
+﻿namespace HealthApp.Infrastructure.Repositories;
 
 internal class BodyRecordRepository : IBodyRecordRepository
 {
@@ -16,6 +14,22 @@ internal class BodyRecordRepository : IBodyRecordRepository
         _dbContext.BodyRecords.Add(bodyRecord);
         await _dbContext.SaveChangesAsync(ct);
         return bodyRecord;
+    }
+
+    public async Task<BodyRecord?> UpdateAsync(BodyRecordSummaryDto dto, CancellationToken ct = default)
+    {
+        var entity = await _dbContext.BodyRecords
+            .FirstOrDefaultAsync(d => d.Id == dto.Id, ct);
+        if (entity is null) return null;
+
+        entity.Title = dto.Title?.Trim() ?? string.Empty;
+        entity.Weight = dto.Weight;
+        entity.BodyFat = dto.BodyFat;
+        entity.RecordedAt = dto.RecordedAt;
+        entity.UpdatedAt = DateTime.UtcNow;
+
+        await _dbContext.SaveChangesAsync(ct);
+        return entity;
     }
 
     public async Task<BodyRecord?> FindByIdAsync(long id, CancellationToken ct = default)

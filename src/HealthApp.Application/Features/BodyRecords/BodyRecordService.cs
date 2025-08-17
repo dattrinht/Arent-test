@@ -26,7 +26,7 @@ internal class BodyRecordService : IBodyRecordService
         var _ = await _profileRepository.FindByIdAsync(req.ProfileId, ct) ?? throw new InvalidOperationException($"Profile {req.ProfileId} does not exist.");
 
         var now = DateTime.UtcNow;
-        var bodyRecord = new BodyRecord
+        var entity = new BodyRecord
         {
             Id = IdGenHelper.CreateId(),
             ProfileId = req.ProfileId,
@@ -39,10 +39,34 @@ internal class BodyRecordService : IBodyRecordService
             IsDeleted = false
         };
 
-        await _bodyRecordRepository.SaveAsync(bodyRecord, ct);
+        await _bodyRecordRepository.SaveAsync(entity, ct);
+        _logger.LogInformation("BodyRecord created: {BodyRecordId} for profile {ProfileId}", entity.Id, entity.ProfileId);
+
         await _monthlyAverageCache.InvalidateAsync(req.ProfileId, ct);
 
-        return new CreateBodyRecordResponse(bodyRecord.Id, bodyRecord.ProfileId);
+        return new CreateBodyRecordResponse(entity.Id, entity.ProfileId);
+    }
+
+    public async Task<BodyRecordSummaryDto?> UpdateAsync(long id, UpdateBodyRecordRequest req, CancellationToken ct = default)
+    {
+        ArgumentNullException.ThrowIfNull(req);
+
+        var dto = new BodyRecordSummaryDto(
+            id,
+            req.Title,
+            req.Weight,
+            req.BodyFat,
+            req.RecordedAt
+        );
+
+        var updated = await _bodyRecordRepository.UpdateAsync(dto, ct);
+        if (updated is null) return null;
+
+        _logger.LogInformation("BodyRecord updated: {BodyRecordId}", id);
+
+        await _monthlyAverageCache.InvalidateAsync(updated.ProfileId, ct);
+
+        return dto;
     }
 
     public async Task<bool> DeleteAsync(long id, CancellationToken ct = default)
@@ -51,7 +75,11 @@ internal class BodyRecordService : IBodyRecordService
         if (entity is null) return false;
 
         var ok = await _bodyRecordRepository.DeleteAsync(id, ct);
-        if (ok) await _monthlyAverageCache.InvalidateAsync(entity.ProfileId, ct);
+        if (ok)
+        {
+            _logger.LogInformation("BodyRecord soft-deleted: {BodyRecordId}", id);
+            await _monthlyAverageCache.InvalidateAsync(entity.ProfileId, ct);
+        }
 
         return ok;
     }

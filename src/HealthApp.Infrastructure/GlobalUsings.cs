@@ -1,5 +1,7 @@
 ﻿global using HealthApp.Domain.Models.BodyRecordModels;
+global using HealthApp.Domain.Models.BodyRecordModels.DTOs;
 global using HealthApp.Domain.Models.DiaryModels;
+global using HealthApp.Domain.Models.DiaryModels.DTOs;
 global using HealthApp.Domain.Models.IdentityModels;
 global using HealthApp.Domain.Models.ProfileModels;
 global using HealthApp.Domain.Models.MealModels;

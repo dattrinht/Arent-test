@@ -1,4 +1,6 @@
-﻿namespace HealthApp.Api.Controllers;
+﻿using HealthApp.Domain.Models.DiaryModels.DTOs;
+
+namespace HealthApp.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]

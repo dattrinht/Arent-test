@@ -71,29 +71,23 @@ internal class DiaryService : IDiaryService
     {
         ArgumentNullException.ThrowIfNull(req);
 
-        var existing = await _diaryRepository.FindByIdAsync(id, ct);
-        if (existing is null) return null;
+        var dto = new DiaryDetailDto(
+            id,
+            default,
+            req.Title,
+            req.Content,
+            string.Empty,
+            req.WrittenAt,
+            default,
+            default
+        );
 
-        existing.Title = req.Title.Trim();
-        existing.Content = req.Content;
-        existing.WrittenAt = req.WrittenAt;
-        existing.UpdatedAt = DateTime.UtcNow;
-
-        var updated = await _diaryRepository.UpdateAsync(existing, ct);
+        var updated = await _diaryRepository.UpdateAsync(dto, ct);
         if (updated is null) return null;
 
         _logger.LogInformation("Diary updated: {DiaryId}", id);
 
-        return new DiaryDetailDto(
-            updated.Id,
-            updated.ProfileId,
-            updated.Title,
-            updated.Content,
-            updated.Preview,
-            updated.WrittenAt,
-            updated.CreatedAt,
-            updated.UpdatedAt
-        );
+        return dto;
     }
 
     public async Task<bool> DeleteAsync(long id, CancellationToken ct = default)

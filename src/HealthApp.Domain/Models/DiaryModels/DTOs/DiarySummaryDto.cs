@@ -1,4 +1,4 @@
-﻿namespace HealthApp.Application.Features.Diaries.Models.DTOs;
+﻿namespace HealthApp.Domain.Models.DiaryModels.DTOs;
 
 public sealed record DiarySummaryDto(
     long Id,

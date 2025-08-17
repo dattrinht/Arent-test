@@ -1,4 +1,4 @@
-﻿namespace HealthApp.Application.Features.Diaries.Models.DTOs;
+﻿namespace HealthApp.Domain.Models.DiaryModels.DTOs;
 
 public sealed record DiaryDetailDto(
     long Id,
@@ -6,7 +6,7 @@ public sealed record DiaryDetailDto(
     string Title,
     string Content,
     string Preview,
-    DateTime DoneAt,
+    DateTime WrittenAt,
     DateTime CreatedAt,
     DateTime UpdatedAt
 );
