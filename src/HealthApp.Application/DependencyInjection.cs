@@ -10,6 +10,7 @@ public static class DependencyInjection
         services.AddScoped<IBodyRecordService, BodyRecordService>();
         services.AddScoped<IMonthlyAverageCache, MonthlyAverageCache>();
         services.AddScoped<IDiaryService, DiaryService>();
+        services.AddScoped<IExerciseService, ExerciseService>();
 
         return services;
     }

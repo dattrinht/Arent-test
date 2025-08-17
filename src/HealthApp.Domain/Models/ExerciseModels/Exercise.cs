@@ -2,13 +2,33 @@
 
 public class Exercise : Entity
 {
+    [Required]
     public long ProfileId { get; set; }
-    public string Name { get; set; }
-    public short Type { get; set; }
+
+    [MaxLength(128)]
+    public string? Name { get; set; }
+
+    [Required]
+    public EnumExerciseType Type { get; set; } 
+
+    [Required]
+    public EnumExerciseStatus Status { get; set; }
+
+    [Range(0, int.MaxValue)]
     public int DurationSec { get; set; }
+
+    [Range(0, int.MaxValue)]
     public int CaloriesBurned { get; set; }
-    public DateTime DoneAt { get; set; }
+
+    [Required]
+    public DateTime FinishedAt { get; set; }
+
+    [Required]
     public DateTime CreatedAt { get; set; }
+
+    [Required]
     public DateTime UpdatedAt { get; set; }
+
+    [Required]
     public bool IsDeleted { get; set; }
 }

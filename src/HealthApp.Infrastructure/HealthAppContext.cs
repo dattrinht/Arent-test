@@ -15,6 +15,7 @@ public class HealthAppContext : DbContext
     public DbSet<Meal> Meals { get; set; }
     public DbSet<BodyRecord> BodyRecords { get; set; }
     public DbSet<Diary> Diaries { get; set; }
+    public DbSet<Exercise> Exercises { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -24,5 +25,6 @@ public class HealthAppContext : DbContext
         modelBuilder.ApplyConfiguration(new MealEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new BodyRecordEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new DiaryEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new ExerciseEntityTypeConfiguration());
     }
 }

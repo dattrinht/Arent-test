@@ -15,7 +15,7 @@ internal class ProfileService : IProfileService
     {
         ArgumentNullException.ThrowIfNull(req);
 
-        var firstName = req.FisrtName?.Trim();
+        var firstName = req.FirstName?.Trim();
         var lastName = req.LastName?.Trim();
 
         ArgumentException.ThrowIfNullOrEmpty(firstName);

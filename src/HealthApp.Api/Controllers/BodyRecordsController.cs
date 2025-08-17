@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace HealthApp.Api.Controllers;
+﻿namespace HealthApp.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -48,7 +46,7 @@ public sealed class BodyRecordsController : ControllerBase
             var now = DateTime.UtcNow;
             toMonthDateOnly = new DateOnly(now.Year, now.Month, 1);
         }
-        else if (!TryParseYearMonth(toMonth!, out toMonthDateOnly))
+        else if (!Utils.TryParseYearMonth(toMonth!, out toMonthDateOnly))
         {
             return BadRequest("Invalid toMonth. Expected format yyyy-MM.");
         }
@@ -59,7 +57,7 @@ public sealed class BodyRecordsController : ControllerBase
             var anchorDate = DateTime.UtcNow.AddMonths(-12);
             fromMonthDateOnly = new DateOnly(anchorDate.Year, anchorDate.Month, 1);
         }
-        else if (!TryParseYearMonth(fromMonth!, out fromMonthDateOnly))
+        else if (!Utils.TryParseYearMonth(fromMonth!, out fromMonthDateOnly))
         {
             return BadRequest("Invalid fromMonth. Expected format yyyy-MM.");
         }
@@ -71,16 +69,5 @@ public sealed class BodyRecordsController : ControllerBase
 
         var result = await _bodyRecordSerivce.FetchMonthlyAveragesAsync(profileId, fromMonthDateOnly, toMonthDateOnly, ct);
         return Ok(result);
-    }
-
-    private static bool TryParseYearMonth(string ym, out DateOnly month)
-    {
-        return DateOnly.TryParseExact(
-            ym + "-01",
-            "yyyy-MM-dd",
-            CultureInfo.InvariantCulture,
-            DateTimeStyles.None,
-            out month
-        );
     }
 }

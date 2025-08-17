@@ -1,0 +1,12 @@
+﻿namespace HealthApp.Domain.Models.ExerciseModels;
+
+public interface IExerciseRepository : IRepository<Exercise>
+{
+    Task<Exercise> SaveAsync(Exercise exercise, CancellationToken ct = default);
+    Task<Exercise?> UpdateAsync(ExerciseSummaryDto dto, CancellationToken ct = default);
+    Task<Exercise?> FindByIdAsync(long id, CancellationToken ct = default);
+    Task<bool> DeleteAsync(long id, CancellationToken ct = default);
+    Task<(IReadOnlyList<TResult> Items, long TotalCount)> FetchByProfileIdAsync<TResult>(
+        ISimplePagingSpecification<Exercise, TResult> spec,
+        CancellationToken ct = default);
+}

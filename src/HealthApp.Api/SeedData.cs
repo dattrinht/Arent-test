@@ -1,4 +1,6 @@
-﻿namespace HealthApp.Api;
+﻿using HealthApp.Domain.Models.ExerciseModels;
+
+namespace HealthApp.Api;
 
 public static class SeedData
 {
@@ -12,6 +14,7 @@ public static class SeedData
         SeedMealsAsync(scope, context).Wait();
         SeedBodyRecordsAsync(scope, context).Wait();
         SeedDiariesAsync(scope, context).Wait();
+        SeedExercisesAsync(scope, context).Wait();
     }
 
     public static async Task SeedUserAsync(IServiceScope scope, HealthAppContext context)
@@ -185,5 +188,40 @@ public static class SeedData
         }
 
         Console.WriteLine($"[DbSeeder] {count} diaries seeded for profile {profileId}");
+    }
+
+    public static async Task SeedExercisesAsync(IServiceScope scope, HealthAppContext context)
+    {
+        if (await context.Exercises.AnyAsync()) return;
+
+        var service = scope.ServiceProvider.GetRequiredService<IExerciseService>();
+        var profile = await context.Profiles.FirstAsync();
+        var profileId = profile.Id;
+
+        var rnd = new Random();
+
+        var count = 50;
+        for (int i = 0; i < count; i++)
+        {
+            var name = "demo";
+            var type = (EnumExerciseType)rnd.Next(0, 4);
+            var status = (EnumExerciseStatus)rnd.Next(0, 4);
+            var durationSec = rnd.Next(300, 3600);
+            var calories = rnd.Next(50, 200);
+
+            var dt = DateTime.UtcNow.Date.AddDays(-rnd.Next(0, 180));
+
+            await service.CreateAsync(new CreateExerciseRequest(
+                profileId,
+                name,
+                type,
+                status,
+                durationSec,
+                calories,
+                dt
+            ));
+        }
+
+        Console.WriteLine($"[DbSeeder] {count} exercises seeded for profile {profileId}");
     }
 }
