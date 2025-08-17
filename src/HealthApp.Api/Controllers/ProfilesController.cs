@@ -20,6 +20,6 @@ public sealed class ProfilesController : ControllerBase
     )
     {
         var result = await _profileService.FetchProfilesByUserAsync(userId, page, pageSize, ct);
-        return Ok(PagingResult<ProfileSummaryDto>.Create(result.Items, result.TotalCount, page, pageSize));
+        return PagingResult<ProfileSummaryDto>.Create(result.Items, result.TotalCount, page, pageSize);
     }
 }

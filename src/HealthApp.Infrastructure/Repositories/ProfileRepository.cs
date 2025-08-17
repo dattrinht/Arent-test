@@ -9,7 +9,7 @@ public class ProfileRepository : IProfileRepository
         _dbContext = dbContext;
     }
 
-    public async Task<Profile> CreateAsync(Profile profile, CancellationToken ct = default)
+    public async Task<Profile> SaveAsync(Profile profile, CancellationToken ct = default)
     {
         _dbContext.Profiles.Add(profile);
         await _dbContext.SaveChangesAsync(ct);

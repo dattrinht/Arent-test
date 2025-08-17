@@ -1,6 +1,6 @@
 ﻿namespace HealthApp.Application.Features.Identities;
 
-public class AuthService : IAuthService
+internal class AuthService : IAuthService
 {
     private const int SaltSize = 16;
     private const int KeySize = 32;
@@ -34,7 +34,7 @@ public class AuthService : IAuthService
             UpdatedAt = DateTime.UtcNow
         };
 
-        user = await _userRepository.CreateAsync(user, ct);
+        user = await _userRepository.SaveAsync(user, ct);
 
         var token = CreateToken(user);
         return new AuthResponse(user.Id, user.Email, token);

@@ -9,7 +9,7 @@ public class UserRepository : IUserRepository
         _dbContext = dbContext;
     }
 
-    public async Task<User> CreateAsync(User user, CancellationToken ct = default)
+    public async Task<User> SaveAsync(User user, CancellationToken ct = default)
     {
         _dbContext.Users.Add(user);
         await _dbContext.SaveChangesAsync(ct);

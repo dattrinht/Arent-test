@@ -1,3 +1,4 @@
+using HealthApp.Api.Middlewares;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,6 +44,8 @@ if (!app.Environment.IsProduction())
     //This is done for development ease but shouldn't be here in production
     app.EnsureSeedData();
 }
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();

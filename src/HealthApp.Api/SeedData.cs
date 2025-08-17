@@ -1,4 +1,6 @@
-﻿namespace HealthApp.Api;
+﻿using HealthApp.Domain.Models.MealModels;
+
+namespace HealthApp.Api;
 
 public static class SeedData
 {
@@ -9,6 +11,7 @@ public static class SeedData
         context.Database.Migrate();
 
         SeedUserAsync(scope, context).Wait();
+        SeedMealsAsync(scope, context).Wait();
     }
 
     public static async Task SeedUserAsync(IServiceScope scope, HealthAppContext context)
@@ -24,7 +27,79 @@ public static class SeedData
         var authResponse = await authService.RegisterAsync(new(email, password));
         Console.WriteLine($"[DbSeeder] Default admin user created: {email}");
 
-        await profileService.CreateProfileAsync(new(authResponse.UserId, "default", "profile", EnumSex.Male));
-        Console.WriteLine($"[DbSeeder] Default profile created");
+        var profileResponse = await profileService.CreateProfileAsync(new(authResponse.UserId, "default", "profileResponse", EnumSex.Male));
+        Console.WriteLine($"[DbSeeder] Default profileResponse created");
+    }
+
+    public static async Task SeedMealsAsync(IServiceScope scope, HealthAppContext context)
+    {
+        if (await context.Meals.AnyAsync()) return;
+
+        var mealService = scope.ServiceProvider.GetRequiredService<IMealService>();
+        var profile = await context.Profiles.FirstAsync();
+        var profileId = profile.Id;
+
+        var rnd = new Random();
+
+        var mealNames = new[]
+        {
+            "Salad", "Pasta", "Chicken Rice", "Fruit Bowl", "Omelette",
+            "Soup", "Sandwich", "Burger", "Pizza", "Sushi", "Steak",
+            "Ramen", "Tacos", "Curry", "Porridge"
+        };
+
+        var mealImageByName = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["Salad"] = "https://images.unsplash.com/photo-1504674900247-0877df9cc836",
+            ["Pasta"] = "https://images.unsplash.com/photo-1600891964599-f61ba0e24092",
+            ["Chicken Rice"] = "https://images.unsplash.com/photo-1617196039897-efdffb46b4df",
+            ["Fruit Bowl"] = "https://images.unsplash.com/photo-1572441710534-680d2a8b9a2b",
+            ["Omelette"] = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c",
+            ["Soup"] = "https://images.unsplash.com/photo-1553621042-f6e147245754",
+            ["Sandwich"] = "https://images.unsplash.com/photo-1568605114967-8130f3a36994",
+            ["Burger"] = "https://images.unsplash.com/photo-1550547660-d9450f859349",
+            ["Pizza"] = "https://images.unsplash.com/photo-1594007654729-407eedc4be65",
+            ["Sushi"] = "https://images.unsplash.com/photo-1546069901-5b3a3b4f1e7e",
+            ["Steak"] = "https://images.unsplash.com/photo-1553163147-622ab57be1c7",
+            ["Ramen"] = "https://images.unsplash.com/photo-1543352632-1735d3201a10",
+            ["Tacos"] = "https://images.unsplash.com/photo-1543339308-43f2d7b3c3c7",
+            ["Curry"] = "https://images.unsplash.com/photo-1604908177079-4f32a3eaad47",
+            ["Porridge"] = "https://images.unsplash.com/photo-1512621776951-a57141f2eefd"
+        };
+
+        static string GetImageFor(string name, IReadOnlyDictionary<string, string> map) =>
+            map.TryGetValue(name, out var url) 
+            ? url
+            : "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe";
+
+        int count = 50;
+        for (int i = 0; i < count; i++)
+        {
+            var name = mealNames[rnd.Next(mealNames.Length)];
+            var image = GetImageFor(name, mealImageByName);
+
+            var type = name switch
+            {
+                "Omelette" or "Porridge" or "Fruit Bowl" => EnumMealType.Breakfast,
+                "Salad" or "Sandwich" => EnumMealType.Lunch,
+                "Pizza" or "Sushi" or "Steak" or "Curry" => EnumMealType.Dinner,
+                _ => EnumMealType.Other
+            };
+
+            var doneAt = DateTime.UtcNow
+                .AddDays(-rnd.Next(0, 14))
+                .AddHours(rnd.Next(0, 24))
+                .AddMinutes(rnd.Next(0, 60));
+
+            await mealService.CreateAsync(new CreateMealRequest(
+                profileId,
+                name,
+                type,
+                image,
+                doneAt
+            ));
+        }
+
+        Console.WriteLine($"[DbSeeder] {count} random meals seeded for profile {profileId}");
     }
 }

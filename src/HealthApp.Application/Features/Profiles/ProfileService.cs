@@ -1,6 +1,6 @@
 ﻿namespace HealthApp.Application.Features.Profiles;
 
-public class ProfileService : IProfileService
+internal class ProfileService : IProfileService
 {
     private readonly IProfileRepository _profileRepository;
 
@@ -33,7 +33,7 @@ public class ProfileService : IProfileService
             IsDeleted = false
         };
 
-        profile = await _profileRepository.CreateAsync(profile, ct);
+        profile = await _profileRepository.SaveAsync(profile, ct);
 
         return new CreateProfileResponse(profile.UserId, profile.Id);
     }

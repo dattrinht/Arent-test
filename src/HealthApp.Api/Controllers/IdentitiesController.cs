@@ -15,19 +15,19 @@ public sealed class IdentitiesController : ControllerBase
     [AllowAnonymous]
     public async Task<ActionResult<AuthResponse>> Register([FromBody] AuthRequest req, CancellationToken ct)
     {
-        return Ok(await _authService.RegisterAsync(req, ct));
+        return await _authService.RegisterAsync(req, ct);
     }
 
     [HttpPost("login")]
     [AllowAnonymous]
     public async Task<ActionResult<AuthResponse>> Login([FromBody] AuthRequest req, CancellationToken ct)
     {
-        return Ok(await _authService.LoginAsync(req, ct));
+        return await _authService.LoginAsync(req, ct);
     }
 
     [HttpGet("secret")]
     public ActionResult<string> Secret()
     {
-        return Ok("SUPER_SECRET_DEMO_ONLY");
+        return "SUPER_SECRET_DEMO_ONLY";
     }
 }
