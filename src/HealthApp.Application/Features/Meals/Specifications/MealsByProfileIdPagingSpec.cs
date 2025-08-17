@@ -12,10 +12,19 @@ public sealed record MealSummaryDto(
 public sealed class MealsByProfileIdPagingSpec
     : SimplePagingSpecification<Meal, MealSummaryDto>
 {
-    public MealsByProfileIdPagingSpec(long profileId, int page, int pageSize)
+    public MealsByProfileIdPagingSpec(
+        long profileId,
+        EnumMealType? type,
+        int page, 
+        int pageSize
+    )
     {
         ApplyPaging(page, pageSize);
-        Criteria = m => m.ProfileId == profileId;
+        ApplyCriteria(m => m.ProfileId == profileId);
+        if (type.HasValue)
+        {
+            ApplyCriteria(m => m.Type == type.Value);
+        }
         Selector = m => new MealSummaryDto(
             m.Id,
             m.ProfileId,

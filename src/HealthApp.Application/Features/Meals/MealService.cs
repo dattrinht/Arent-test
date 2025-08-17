@@ -39,12 +39,13 @@ internal class MealService : IMealService
 
     public async Task<(IReadOnlyList<MealSummaryDto> Items, long TotalCount)> FetchByProfileAsync(
         long profileId,
+        EnumMealType? type,
         int page,
         int pageSize,
         CancellationToken ct = default
     )
     {
-        var spec = new MealsByProfileIdPagingSpec(profileId, page, pageSize);
+        var spec = new MealsByProfileIdPagingSpec(profileId, type, page, pageSize);
         return await _mealRepository.FetchByProfileIdAsync(spec, ct);
     }
 

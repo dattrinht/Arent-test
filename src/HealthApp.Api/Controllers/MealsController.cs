@@ -21,12 +21,13 @@ public sealed class MealsController : ControllerBase
     [HttpGet("{profileId:long}")]
     public async Task<ActionResult<PagingResult<MealSummaryDto>>> FetchByProfile(
         [FromRoute] long profileId,
+        [FromQuery] EnumMealType? type,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20,
         CancellationToken ct = default
     )
     {
-        var result = await _mealService.FetchByProfileAsync(profileId, page, pageSize, ct);
+        var result = await _mealService.FetchByProfileAsync(profileId, type, page, pageSize, ct);
         return PagingResult<MealSummaryDto>.Create(result.Items, result.TotalCount, page, pageSize);
     }
 

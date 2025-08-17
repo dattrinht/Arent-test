@@ -15,7 +15,7 @@ public interface ISimplePagingSpecification<T, TResult>
 
 public abstract class SimplePagingSpecification<T, TResult> : ISimplePagingSpecification<T, TResult>
 {
-    public Expression<Func<T, bool>>? Criteria { get; protected init; }
+    public Expression<Func<T, bool>>? Criteria { get; protected set; }
     public Expression<Func<T, object>>? OrderBy { get; protected set; }
     public Expression<Func<T, object>>? OrderByDescending { get; protected set; }
     public Expression<Func<T, TResult>>? Selector { get; protected set; }
@@ -36,5 +36,23 @@ public abstract class SimplePagingSpecification<T, TResult> : ISimplePagingSpeci
         Skip = (p - 1) * ps;
         Take = ps;
         IsPagingEnabled = true;
+    }
+
+    protected void ApplyCriteria(Expression<Func<T, bool>> newCriteria)
+    {
+        if (Criteria is null)
+        {
+            Criteria = newCriteria;
+        }
+        else
+        {
+            var param = Expression.Parameter(typeof(T));
+
+            var body = Expression.AndAlso(
+                Expression.Invoke(Criteria, param),
+                Expression.Invoke(newCriteria, param));
+
+            Criteria = Expression.Lambda<Func<T, bool>>(body, param);
+        }
     }
 }
