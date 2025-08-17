@@ -1,7 +1,5 @@
 ﻿namespace HealthApp.Application.Features.Profiles.Specifications;
 
-public sealed record ProfileSummaryDto(long Id, string FirstName, string LastName);
-
 public sealed class ProfilesByUserIdPagingSpec
     : SimplePagingSpecification<Profile, ProfileSummaryDto>
 {

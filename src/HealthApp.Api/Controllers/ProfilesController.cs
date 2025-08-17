@@ -11,9 +11,9 @@ public sealed class ProfilesController : ControllerBase
         _profileService = profileService;
     }
 
-    [HttpGet("{userId:long}")]
+    [HttpGet("fetch")]
     public async Task<ActionResult<PagingResult<ProfileSummaryDto>>> FetchByUser(
-        [FromRoute] long userId,
+        [FromQuery] long userId,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20,
         CancellationToken ct = default

@@ -1,3 +1,8 @@
 ﻿namespace HealthApp.Application.Features.Profiles.Models;
 
-public record CreateProfileRequest(long UserId, string FisrtName, string LastName, EnumSex Sex);
+public sealed record CreateProfileRequest(
+    [property: Required] long UserId,
+    [property: Required, StringLength(100, MinimumLength = 1)] string FirstName,
+    [property: Required, StringLength(100, MinimumLength = 1)] string LastName,
+    [property: Required]  EnumSex Sex
+);
