@@ -1,4 +1,5 @@
-﻿global using HealthApp.Domain.Models.BodyRecordModels;
+﻿global using HealthApp.Application.Helpers;
+global using HealthApp.Domain.Models.BodyRecordModels;
 global using HealthApp.Domain.Models.BodyRecordModels.DTOs;
 global using HealthApp.Domain.Models.ColumnModels;
 global using HealthApp.Domain.Models.ColumnModels.DTOs;
@@ -18,3 +19,4 @@ global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
+global using System.Linq.Expressions;

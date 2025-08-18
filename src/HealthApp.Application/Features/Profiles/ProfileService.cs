@@ -41,7 +41,7 @@ internal class ProfileService : IProfileService
         return new CreateProfileResponse(entity.UserId, entity.Id);
     }
 
-    public async Task<(IReadOnlyList<ProfileSummaryDto> Items, long TotalCount)> FetchProfilesByUserAsync(
+    public async Task<(IReadOnlyList<ProfileSummaryDto> Items, int TotalCount)> FetchProfilesByUserAsync(
         long userId,
         int page,
         int pageSize,

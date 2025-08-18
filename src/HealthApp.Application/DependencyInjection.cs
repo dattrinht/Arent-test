@@ -12,6 +12,7 @@ public static class DependencyInjection
         services.AddScoped<IDiaryService, DiaryService>();
         services.AddScoped<IExerciseService, ExerciseService>();
         services.AddScoped<IColumnTaxonomyService, ColumnTaxonomyService>();
+        services.AddScoped<IColumnService, ColumnService>();
 
         return services;
     }

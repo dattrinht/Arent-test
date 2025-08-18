@@ -22,7 +22,7 @@ internal class ProfileRepository : IProfileRepository
             .FirstOrDefaultAsync(p => p.Id == id, ct);
     }
 
-    public async Task<(IReadOnlyList<T> Items, long TotalCount)> FetchByUserIdAsync<T>(
+    public async Task<(IReadOnlyList<T> Items, int TotalCount)> FetchByUserIdAsync<T>(
         ISimplePagingSpecification<Profile, T> spec,
         CancellationToken ct = default
     )
@@ -32,7 +32,7 @@ internal class ProfileRepository : IProfileRepository
         var filtered = SimplePagingSpecificationEvaluator.GetQuery(
             baseQuery, spec, out var filteredBeforePaging);
 
-        var total = await filteredBeforePaging.LongCountAsync(ct);
+        var total = await filteredBeforePaging.CountAsync(ct);
         var items = await filtered.ToListAsync(ct);
 
         return (items, total);

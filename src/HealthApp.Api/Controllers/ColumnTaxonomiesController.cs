@@ -1,8 +1,4 @@
-﻿using HealthApp.Application.Features.Columns;
-using HealthApp.Application.Features.Columns.Models;
-using HealthApp.Domain.Models.ColumnModels.DTOs;
-
-namespace HealthApp.Api.Controllers;
+﻿namespace HealthApp.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]

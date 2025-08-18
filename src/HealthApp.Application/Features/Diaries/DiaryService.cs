@@ -56,7 +56,7 @@ internal class DiaryService : IDiaryService
         );
     }
 
-    public async Task<(IReadOnlyList<DiarySummaryDto> Items, long TotalCount)> FetchByProfileAsync(
+    public async Task<(IReadOnlyList<DiarySummaryDto> Items, int TotalCount)> FetchByProfileAsync(
         long profileId,
         int page,
         int pageSize,

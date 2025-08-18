@@ -33,7 +33,7 @@ internal class DiaryRepository : IDiaryRepository
         return entity;
     }
 
-    public async Task<(IReadOnlyList<TResult> Items, long TotalCount)> FetchByProfileIdAsync<TResult>(
+    public async Task<(IReadOnlyList<TResult> Items, int TotalCount)> FetchByProfileIdAsync<TResult>(
         ISimplePagingSpecification<Diary, TResult> spec,
         CancellationToken ct = default
     )
@@ -43,7 +43,7 @@ internal class DiaryRepository : IDiaryRepository
         var projected = SimplePagingSpecificationEvaluator.GetQuery(
             baseQuery, spec, out var filteredBeforePaging);
 
-        var total = await filteredBeforePaging.LongCountAsync(ct);
+        var total = await filteredBeforePaging.CountAsync(ct);
         var items = await projected.ToListAsync(ct);
 
         return (items, total);

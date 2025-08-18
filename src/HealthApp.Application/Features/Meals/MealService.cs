@@ -43,7 +43,7 @@ internal class MealService : IMealService
         return new CreateMealResponse(entity.Id, entity.ProfileId);
     }
 
-    public async Task<(IReadOnlyList<MealSummaryDto> Items, long TotalCount)> FetchByProfileAsync(
+    public async Task<(IReadOnlyList<MealSummaryDto> Items, int TotalCount)> FetchByProfileAsync(
         long profileId,
         EnumMealType? type,
         int page,

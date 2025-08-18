@@ -1,6 +1,4 @@
-﻿using HealthApp.Application.Features.Columns;
-using HealthApp.Domain.Models.ColumnModels;
-using HealthApp.Domain.Models.ExerciseModels;
+﻿using HealthApp.Domain.Models.ExerciseModels;
 
 namespace HealthApp.Api;
 
@@ -18,6 +16,7 @@ public static class SeedData
         SeedDiariesAsync(scope, context).Wait();
         SeedExercisesAsync(scope, context).Wait();
         SeedColumnTaxonomiesAsync(scope, context).Wait();
+        SeedColumnsAsync(scope, context).Wait();
     }
 
     public static async Task SeedUserAsync(IServiceScope scope, HealthAppContext context)
@@ -245,5 +244,69 @@ public static class SeedData
         await service.CreateAsync(new(profileId, "Washoku", EnumTaxonomyType.Tag));
 
         Console.WriteLine($"[DbSeeder] column taxonomies seeded for profile {profileId}");
+    }
+
+    public static async Task SeedColumnsAsync(IServiceScope scope, HealthAppContext context)
+    {
+        if (await context.Columns.AnyAsync()) return;
+
+        var service = scope.ServiceProvider.GetRequiredService<IColumnService>();
+        var profile = await context.Profiles.FirstAsync();
+        var profileId = profile.Id;
+        var now = DateTime.UtcNow;
+
+        var wantedTaxonomyNames = new[]
+        {
+            "Diet", "Beauty", "Health",
+            "DHA", "FishCuisine", "Washoku"
+        };
+
+        var taxoMap = await context.ColumnTaxonomies
+            .Where(t => t.ProfileId == profileId
+                        && !t.IsDeleted
+                        && wantedTaxonomyNames.Contains(t.Name))
+            .ToDictionaryAsync(t => t.Name, t => t.Id);
+
+        long[] GetTaxIds(params string[] names) =>
+            [.. names.Where(n => taxoMap.ContainsKey(n)).Select(n => taxoMap[n]).Distinct()];
+
+        var columns = new[]
+        {
+            new CreateColumnRequest(
+                ProfileId:   profileId,
+                Slug:        "healthy-eating-101",
+                Title:       "Healthy Eating 101",
+                Summary:     "Basics of balanced nutrition to kickstart your wellness journey.",
+                Content:     "This article introduces macronutrients, micronutrients, and portion control...",
+                DisplayImage:"https://images.unsplash.com/photo-1504674900247-0877df9cc836",
+                IsPublished: true,
+                TaxonomyIds: GetTaxIds("Diet", "Health", "DHA")
+            ),
+            new CreateColumnRequest(
+                ProfileId:   profileId,
+                Slug:        "beauty-from-within",
+                Title:       "Beauty From Within",
+                Summary:     "Skin, hair, and nails: how diet and habits affect your look.",
+                Content:     "Collagen, vitamins A/C/E, hydration, and sleep hygiene all play a role...",
+                DisplayImage:"https://images.unsplash.com/photo-1505577058444-a3dab90d4253",
+                IsPublished: true,
+                TaxonomyIds: GetTaxIds("Beauty", "Diet")
+            ),
+            new CreateColumnRequest(
+                ProfileId:   profileId,
+                Slug:        "omega-3-and-dha-guide",
+                Title:       "A Quick Guide to Omega-3 & DHA",
+                Summary:     "Why DHA matters and the best ways to get enough.",
+                Content:     "DHA supports brain and eye health. Sources include salmon, mackerel...",
+                DisplayImage:"https://images.unsplash.com/photo-1516357231954-91487b459602",
+                IsPublished: true,
+                TaxonomyIds: GetTaxIds("Health", "DHA", "FishCuisine", "Washoku")
+            )
+        };
+
+        foreach (var req in columns)
+            await service.CreateAsync(req);
+
+        Console.WriteLine($"[DbSeeder] {columns.Length} columns seeded for profile {profileId}");
     }
 }

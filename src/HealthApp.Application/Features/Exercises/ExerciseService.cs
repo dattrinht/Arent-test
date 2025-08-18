@@ -59,7 +59,7 @@ internal class ExerciseService : IExerciseService
         );
     }
 
-    public async Task<(IReadOnlyList<ExerciseSummaryDto> Items, long TotalCount)> FetchByProfileAsync(
+    public async Task<(IReadOnlyList<ExerciseSummaryDto> Items, int TotalCount)> FetchByProfileAsync(
         long profileId,
         DateOnly? byDate,
         int page,

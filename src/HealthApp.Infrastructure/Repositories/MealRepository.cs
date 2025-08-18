@@ -32,7 +32,7 @@ internal class MealRepository : IMealRepository
         return entity;
     }
 
-    public async Task<(IReadOnlyList<TResult> Items, long TotalCount)> FetchByProfileIdAsync<TResult>(
+    public async Task<(IReadOnlyList<TResult> Items, int TotalCount)> FetchByProfileIdAsync<TResult>(
         ISimplePagingSpecification<Meal, TResult> spec,
         CancellationToken ct = default
     )
@@ -42,7 +42,7 @@ internal class MealRepository : IMealRepository
         var filtered = SimplePagingSpecificationEvaluator.GetQuery(
             baseQuery, spec, out var filteredBeforePaging);
 
-        var total = await filteredBeforePaging.LongCountAsync(ct);
+        var total = await filteredBeforePaging.CountAsync(ct);
         var items = await filtered.ToListAsync(ct);
 
         return (items, total);

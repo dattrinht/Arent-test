@@ -4,7 +4,7 @@ public interface IColumnTaxonomyRepository : IRepository<ColumnTaxonomy>
 {
     Task<ColumnTaxonomy> SaveAsync(ColumnTaxonomy taxonomy, CancellationToken ct = default);
     Task<ColumnTaxonomy?> UpdateAsync(ColumnTaxonomySummaryDto dto, CancellationToken ct = default);
-    Task<(IReadOnlyList<TResult> Items, long TotalCount)> FetchByProfileIdAsync<TResult>(
+    Task<(IReadOnlyList<TResult> Items, int TotalCount)> FetchByProfileIdAsync<TResult>(
         ISimplePagingSpecification<ColumnTaxonomy, TResult> spec,
         CancellationToken ct = default
     );

@@ -40,7 +40,7 @@ internal class ColumnTaxonomyService : IColumnTaxonomyService
         return new CreateColumnTaxonomyResponse(entity.Id, entity.ProfileId);
     }
 
-    public async Task<(IReadOnlyList<ColumnTaxonomySummaryDto> Items, long TotalCount)> FetchByProfileAsync(
+    public async Task<(IReadOnlyList<ColumnTaxonomySummaryDto> Items, int TotalCount)> FetchByProfileAsync(
         long profileId,
         int page,
         int pageSize,

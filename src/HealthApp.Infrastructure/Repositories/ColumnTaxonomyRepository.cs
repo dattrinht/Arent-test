@@ -29,7 +29,7 @@ internal class ColumnTaxonomyRepository : IColumnTaxonomyRepository
         return entity;
     }
 
-    public async Task<(IReadOnlyList<TResult> Items, long TotalCount)> FetchByProfileIdAsync<TResult>(
+    public async Task<(IReadOnlyList<TResult> Items, int TotalCount)> FetchByProfileIdAsync<TResult>(
         ISimplePagingSpecification<ColumnTaxonomy, TResult> spec,
         CancellationToken ct = default
     )
@@ -39,7 +39,7 @@ internal class ColumnTaxonomyRepository : IColumnTaxonomyRepository
         var projected = SimplePagingSpecificationEvaluator.GetQuery(
             baseQuery, spec, out var filteredBeforePaging);
 
-        var total = await filteredBeforePaging.LongCountAsync(ct);
+        var total = await filteredBeforePaging.CountAsync(ct);
         var items = await projected.ToListAsync(ct);
 
         return (items, total);

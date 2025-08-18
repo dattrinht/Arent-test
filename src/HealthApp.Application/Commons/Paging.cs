@@ -6,8 +6,8 @@ public sealed record PagedResponse<T>(
     IReadOnlyList<T> Items,
     int Page,
     int PageSize,
-    long TotalCount
+    int TotalCount
 )
 {
-    public bool HasNext => (long)Page * PageSize < TotalCount;
+    public bool HasNext => (int)Page * PageSize < TotalCount;
 }
