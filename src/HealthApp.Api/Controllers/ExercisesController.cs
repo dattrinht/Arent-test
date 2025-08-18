@@ -25,7 +25,8 @@ public sealed class ExercisesController : ControllerBase
         [FromQuery] string? byDate,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20,
-        CancellationToken ct = default)
+        CancellationToken ct = default
+    )
     {
         DateOnly byDateOnly = default;
         var hasByDate = !string.IsNullOrWhiteSpace(byDate);
@@ -48,9 +49,21 @@ public sealed class ExercisesController : ControllerBase
     [HttpDelete("{id:long}")]
     public async Task<ActionResult<bool>> Delete(
         [FromRoute] long id,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         var result = await _exerciseService.DeleteAsync(id, ct);
+        return result;
+    }
+
+    [HttpGet("/achievement")]
+    public async Task<ActionResult<ExerciseAchievementDto>> GetAchievementByDate(
+        [FromQuery] long profileId,
+        [FromQuery] DateOnly day,
+        CancellationToken ct = default
+    )
+    {
+        var result = await _exerciseService.GetAchievementByDateAsync(profileId, day, ct);
         return result;
     }
 }

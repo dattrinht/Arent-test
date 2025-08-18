@@ -100,4 +100,10 @@ internal class ExerciseService : IExerciseService
         if (ok) _logger.LogInformation("Exercise soft-deleted: {ExerciseId}", id);
         return ok;
     }
+
+    public async Task<ExerciseAchievementDto> GetAchievementByDateAsync(long profileId, DateOnly day, CancellationToken ct = default)
+    {
+        var result = await _exerciseRepository.GetAchievementAsync(profileId, day, null, ct);
+        return result;
+    }
 }

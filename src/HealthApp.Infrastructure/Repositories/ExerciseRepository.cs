@@ -65,4 +65,29 @@ internal class ExerciseRepository : IExerciseRepository
         await _dbContext.SaveChangesAsync(ct);
         return true;
     }
+
+    public async Task<ExerciseAchievementDto> GetAchievementAsync(
+        long profileId,
+        DateOnly? fromDate = null,
+        DateOnly? toDate = null,
+        CancellationToken ct = default
+    )
+    {
+        // if no fromDate provided --> from = today
+        var actualFromDate = fromDate ?? DateOnly.FromDateTime(DateTime.UtcNow);
+        var from = DateTime.SpecifyKind(actualFromDate.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
+
+        // if no toDate provided --> to = end of fromDate
+        var actualToDate = toDate ?? actualFromDate;
+        var to = DateTime.SpecifyKind(actualToDate.ToDateTime(TimeOnly.MaxValue), DateTimeKind.Utc);
+
+        var query = _dbContext.Exercises
+            .Where(x => x.ProfileId == profileId)
+            .Where(e => e.FinishedAt >= from && e.FinishedAt <= to);
+
+        var total = await query.CountAsync(ct);
+        var completed = await query.CountAsync(e => e.Status == EnumExerciseStatus.Completed, ct);
+
+        return new ExerciseAchievementDto(total, completed);
+    }
 }

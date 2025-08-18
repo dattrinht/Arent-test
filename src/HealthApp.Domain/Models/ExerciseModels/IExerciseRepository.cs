@@ -8,5 +8,12 @@ public interface IExerciseRepository : IRepository<Exercise>
     Task<bool> DeleteAsync(long id, CancellationToken ct = default);
     Task<(IReadOnlyList<TResult> Items, long TotalCount)> FetchByProfileIdAsync<TResult>(
         ISimplePagingSpecification<Exercise, TResult> spec,
-        CancellationToken ct = default);
+        CancellationToken ct = default
+    );
+    Task<ExerciseAchievementDto> GetAchievementAsync(
+        long profileId,
+        DateOnly? fromDate = null,
+        DateOnly? toDate = null,
+        CancellationToken ct = default
+    );
 }
