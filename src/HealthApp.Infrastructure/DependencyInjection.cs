@@ -25,6 +25,7 @@ public static class DependencyInjection
         services.AddScoped<IBodyRecordRepository, BodyRecordRepository>();
         services.AddScoped<IDiaryRepository, DiaryRepository>();
         services.AddScoped<IExerciseRepository, ExerciseRepository>();
+        services.AddScoped<IColumnTaxonomyRepository, ColumnTaxonomyRepository>();
 
         return services;
     }

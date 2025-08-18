@@ -22,7 +22,10 @@ internal class ProfileRepository : IProfileRepository
             .FirstOrDefaultAsync(p => p.Id == id, ct);
     }
 
-    public async Task<(IReadOnlyList<T> Items, long TotalCount)> FetchByUserIdAsync<T>(ISimplePagingSpecification<Profile, T> spec, CancellationToken ct = default)
+    public async Task<(IReadOnlyList<T> Items, long TotalCount)> FetchByUserIdAsync<T>(
+        ISimplePagingSpecification<Profile, T> spec,
+        CancellationToken ct = default
+    )
     {
         IQueryable<Profile> baseQuery = _dbContext.Profiles;
 

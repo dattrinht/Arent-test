@@ -1,4 +1,6 @@
-﻿using HealthApp.Domain.Models.ExerciseModels;
+﻿using HealthApp.Application.Features.Columns;
+using HealthApp.Domain.Models.ColumnModels;
+using HealthApp.Domain.Models.ExerciseModels;
 
 namespace HealthApp.Api;
 
@@ -15,6 +17,7 @@ public static class SeedData
         SeedBodyRecordsAsync(scope, context).Wait();
         SeedDiariesAsync(scope, context).Wait();
         SeedExercisesAsync(scope, context).Wait();
+        SeedColumnTaxonomiesAsync(scope, context).Wait();
     }
 
     public static async Task SeedUserAsync(IServiceScope scope, HealthAppContext context)
@@ -223,5 +226,24 @@ public static class SeedData
         }
 
         Console.WriteLine($"[DbSeeder] {count} exercises seeded for profile {profileId}");
+    }
+
+    public static async Task SeedColumnTaxonomiesAsync(IServiceScope scope, HealthAppContext context)
+    {
+        if (await context.ColumnTaxonomies.AnyAsync()) return;
+
+        var service = scope.ServiceProvider.GetRequiredService<IColumnTaxonomyService>();
+        var profile = await context.Profiles.FirstAsync();
+        var profileId = profile.Id;
+
+        await service.CreateAsync(new(profileId, "Diet", EnumTaxonomyType.Category));
+        await service.CreateAsync(new(profileId, "Beauty", EnumTaxonomyType.Category));
+        await service.CreateAsync(new(profileId, "Health", EnumTaxonomyType.Category));
+
+        await service.CreateAsync(new(profileId, "DHA", EnumTaxonomyType.Tag));
+        await service.CreateAsync(new(profileId, "FishCuisine", EnumTaxonomyType.Tag));
+        await service.CreateAsync(new(profileId, "Washoku", EnumTaxonomyType.Tag));
+
+        Console.WriteLine($"[DbSeeder] column taxonomies seeded for profile {profileId}");
     }
 }

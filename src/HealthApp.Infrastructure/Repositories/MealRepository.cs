@@ -32,7 +32,10 @@ internal class MealRepository : IMealRepository
         return entity;
     }
 
-    public async Task<(IReadOnlyList<TResult> Items, long TotalCount)> FetchByProfileIdAsync<TResult>(ISimplePagingSpecification<Meal, TResult> spec, CancellationToken ct = default)
+    public async Task<(IReadOnlyList<TResult> Items, long TotalCount)> FetchByProfileIdAsync<TResult>(
+        ISimplePagingSpecification<Meal, TResult> spec,
+        CancellationToken ct = default
+    )
     {
         IQueryable<Meal> baseQuery = _dbContext.Meals;
 

@@ -35,7 +35,8 @@ internal class DiaryRepository : IDiaryRepository
 
     public async Task<(IReadOnlyList<TResult> Items, long TotalCount)> FetchByProfileIdAsync<TResult>(
         ISimplePagingSpecification<Diary, TResult> spec,
-        CancellationToken ct = default)
+        CancellationToken ct = default
+    )
     {
         IQueryable<Diary> baseQuery = _dbContext.Diaries;
 

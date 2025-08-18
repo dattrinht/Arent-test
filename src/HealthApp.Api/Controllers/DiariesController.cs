@@ -31,7 +31,8 @@ public sealed class DiariesController : ControllerBase
         [FromQuery] long profileId,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20,
-        CancellationToken ct = default)
+        CancellationToken ct = default
+    )
     {
         var (items, total) = await _diaryService.FetchByProfileAsync(profileId, page, pageSize, ct);
         return PagingResult<DiarySummaryDto>.Create(items, total, page, pageSize);
@@ -45,9 +46,7 @@ public sealed class DiariesController : ControllerBase
     }
 
     [HttpDelete("{id:long}")]
-    public async Task<ActionResult<bool>> Delete(
-        [FromRoute] long id,
-        CancellationToken ct)
+    public async Task<ActionResult<bool>> Delete([FromRoute] long id, CancellationToken ct)
     {
         var result = await _diaryService.DeleteAsync(id, ct);
         return result;

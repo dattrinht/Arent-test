@@ -17,6 +17,10 @@ public class HealthAppContext : DbContext
     public DbSet<Diary> Diaries { get; set; }
     public DbSet<Exercise> Exercises { get; set; }
 
+    public DbSet<Column> Columns { get; set; }
+    public DbSet<ColumnTaxonomy> ColumnTaxonomies { get; set; }
+    public DbSet<ColumnTaxonomyAssociation> ColumnTaxonomyAssociations { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("healthapp");
@@ -26,5 +30,9 @@ public class HealthAppContext : DbContext
         modelBuilder.ApplyConfiguration(new BodyRecordEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new DiaryEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new ExerciseEntityTypeConfiguration());
+
+        modelBuilder.ApplyConfiguration(new ColumnEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new ColumnTaxonomyEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new ColumnTaxonomyAssociationEntityTypeConfiguration());
     }
 }

@@ -11,6 +11,7 @@ public static class DependencyInjection
         services.AddScoped<IMonthlyAverageCache, MonthlyAverageCache>();
         services.AddScoped<IDiaryService, DiaryService>();
         services.AddScoped<IExerciseService, ExerciseService>();
+        services.AddScoped<IColumnTaxonomyService, ColumnTaxonomyService>();
 
         return services;
     }

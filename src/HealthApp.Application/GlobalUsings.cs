@@ -1,6 +1,9 @@
 ﻿global using HealthApp.Application.Features.BodyRecords;
 global using HealthApp.Application.Features.BodyRecords.Caches;
 global using HealthApp.Application.Features.BodyRecords.Models;
+global using HealthApp.Application.Features.Columns;
+global using HealthApp.Application.Features.Columns.Models;
+global using HealthApp.Application.Features.Columns.Specifications;
 global using HealthApp.Application.Features.Diaries;
 global using HealthApp.Application.Features.Diaries.Models;
 global using HealthApp.Application.Features.Diaries.Specifications;
@@ -18,6 +21,8 @@ global using HealthApp.Application.Features.Profiles.Specifications;
 global using HealthApp.Application.Helpers;
 global using HealthApp.Domain.Models.BodyRecordModels;
 global using HealthApp.Domain.Models.BodyRecordModels.DTOs;
+global using HealthApp.Domain.Models.ColumnModels;
+global using HealthApp.Domain.Models.ColumnModels.DTOs;
 global using HealthApp.Domain.Models.DiaryModels;
 global using HealthApp.Domain.Models.DiaryModels.DTOs;
 global using HealthApp.Domain.Models.ExerciseModels;

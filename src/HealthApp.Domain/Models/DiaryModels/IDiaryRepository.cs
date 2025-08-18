@@ -6,5 +6,8 @@ public interface IDiaryRepository : IRepository<Diary>
     Task<Diary?> UpdateAsync(DiaryDetailDto dto, CancellationToken ct = default);
     Task<Diary?> FindByIdAsync(long id, CancellationToken ct = default);
     Task<bool> DeleteAsync(long id, CancellationToken ct = default);
-    Task<(IReadOnlyList<TResult> Items, long TotalCount)> FetchByProfileIdAsync<TResult>(ISimplePagingSpecification<Diary, TResult> spec, CancellationToken ct = default);
+    Task<(IReadOnlyList<TResult> Items, long TotalCount)> FetchByProfileIdAsync<TResult>(
+        ISimplePagingSpecification<Diary, TResult> spec,
+        CancellationToken ct = default
+    );
 }

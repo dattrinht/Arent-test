@@ -36,7 +36,8 @@ internal class ExerciseRepository : IExerciseRepository
 
     public async Task<(IReadOnlyList<TResult> Items, long TotalCount)> FetchByProfileIdAsync<TResult>(
         ISimplePagingSpecification<Exercise, TResult> spec,
-        CancellationToken ct = default)
+        CancellationToken ct = default
+    )
     {
         IQueryable<Exercise> baseQuery = _dbContext.Exercises;
 
