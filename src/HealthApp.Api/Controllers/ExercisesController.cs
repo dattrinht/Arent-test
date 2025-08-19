@@ -30,9 +30,9 @@ public sealed class ExercisesController : ControllerBase
     {
         DateOnly byDateOnly = default;
         var hasByDate = !string.IsNullOrWhiteSpace(byDate);
-        if (hasByDate && !Utils.TryParseYearMonth(byDate!, out byDateOnly))
+        if (hasByDate && !DateOnly.TryParseExact(byDate!, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out byDateOnly))
         {
-            return BadRequest("Invalid byDate. Expected format yyyy-MM.");
+            return BadRequest("Invalid byDate. Expected format yyyy-MM-dd.");
         }
 
         var (items, total) = await _exerciseService.FetchByProfileAsync(profileId, hasByDate ? byDateOnly : null, page, pageSize, ct);

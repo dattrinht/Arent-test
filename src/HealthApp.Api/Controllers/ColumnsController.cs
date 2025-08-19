@@ -42,7 +42,7 @@ public sealed class ColumnsController : ControllerBase
         return result;
     }
 
-    [HttpGet("slug/{slug:string}")]
+    [HttpGet("slug/{slug}")]
     public async Task<ActionResult<ColumnDetailDto>> GetBySlug([FromRoute] string slug, CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(slug)) return BadRequest("Slug is required.");

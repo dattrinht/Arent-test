@@ -24,6 +24,7 @@ internal class ColumnService : IColumnService
 
         var dto = new ColumnDetailDto(
             Id: 0,
+            ProfileId: req.ProfileId,
             Slug: (req.Slug ?? string.Empty).Trim().ToLowerInvariant(),
             Title: (req.Title ?? string.Empty).Trim(),
             Summary: req.Summary ?? string.Empty,
@@ -51,6 +52,7 @@ internal class ColumnService : IColumnService
 
         var dto = new ColumnDetailDto(
             Id: id,
+            ProfileId: default,    // ignored by repo
             Slug: (req.Slug ?? string.Empty).Trim().ToLowerInvariant(),
             Title: (req.Title ?? string.Empty).Trim(),
             Summary: req.Summary ?? string.Empty,

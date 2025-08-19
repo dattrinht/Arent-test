@@ -9,8 +9,8 @@ internal sealed class ExercisesByProfileIdPagingSpec
         ApplyCriteria(e => e.ProfileId == profileId);
         if (byDate is not null)
         {
-            var start = byDate.Value.ToDateTime(TimeOnly.MinValue);
-            var end = byDate.Value.AddDays(1).ToDateTime(TimeOnly.MinValue);
+            var start = new DateTime(byDate.Value.Year, byDate.Value.Month, byDate.Value.Day, 0, 0, 0, DateTimeKind.Utc);
+            var end = start.AddDays(1);
 
             ApplyCriteria(e => e.FinishedAt >= start && e.FinishedAt < end);
         }

@@ -16,6 +16,7 @@ internal class ColumnRepository : IColumnRepository
         var entity = new Column
         {
             Id = IdGenHelper.CreateId(),
+            ProfileId = dto.ProfileId,
             Slug = dto.Slug.Trim().ToLower(),
             Title = dto.Title.Trim(),
             Summary = dto.Summary,
@@ -235,7 +236,8 @@ internal class ColumnRepository : IColumnRepository
 
     public async Task<ColumnDetailDto?> FindBySlugAsync(string slug, CancellationToken ct = default)
     {
-        var result = await FindByPredicate(x => x.Slug.Equals(slug, StringComparison.CurrentCultureIgnoreCase), ct);
+        var lower = (slug ?? "").Trim().ToLowerInvariant();
+        var result = await FindByPredicate(x => x.Slug == lower, ct);
         return result;
     }
 
@@ -255,6 +257,7 @@ internal class ColumnRepository : IColumnRepository
 
         var result = new ColumnDetailDto(
             entity.Id,
+            entity.ProfileId,
             entity.Slug,
             entity.Title,
             entity.Summary,

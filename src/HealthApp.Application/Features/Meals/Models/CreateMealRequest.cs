@@ -1,9 +1,9 @@
 ﻿namespace HealthApp.Application.Features.Meals.Models;
 
 public sealed record CreateMealRequest(
-    [property: Required, Range(1, long.MaxValue)] long ProfileId,
-    [property: Required, StringLength(200, MinimumLength = 1)] string Name,
-    [property: Required] EnumMealType Type,
-    [property: StringLength(500)] string? Image,
-    [property: Required] DateTime DoneAt
+    [Required, Range(1, long.MaxValue)] long ProfileId,
+    [Required, StringLength(200, MinimumLength = 1)] string Name,
+    [Required] EnumMealType Type,
+    [StringLength(500)] string? Image,
+    [Required] DateTime DoneAt
 );
