@@ -8,9 +8,6 @@ public record ColumnSummaryDto(
     string? DisplayImage,
     bool IsPublished,
     DateTime CreatedAt,
-    DateTime? PublishedAt
-
-)
-{
-    public IReadOnlyList<ColumnTaxonomySummaryDto>? Taxonomies { get; set; }
-}
+    DateTime? PublishedAt,
+    IReadOnlyList<ColumnTaxonomySummaryDto>? Taxonomies
+);

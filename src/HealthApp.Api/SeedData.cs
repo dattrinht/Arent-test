@@ -262,8 +262,7 @@ public static class SeedData
         };
 
         var taxoMap = await context.ColumnTaxonomies
-            .Where(t => t.ProfileId == profileId
-                        && !t.IsDeleted
+            .Where(t => !t.IsDeleted
                         && wantedTaxonomyNames.Contains(t.Name))
             .ToDictionaryAsync(t => t.Name, t => t.Id);
 
@@ -273,7 +272,6 @@ public static class SeedData
         var columns = new[]
         {
             new CreateColumnRequest(
-                ProfileId:   profileId,
                 Slug:        "healthy-eating-101",
                 Title:       "Healthy Eating 101",
                 Summary:     "Basics of balanced nutrition to kickstart your wellness journey.",
@@ -283,7 +281,6 @@ public static class SeedData
                 TaxonomyIds: GetTaxIds("Diet", "Health", "DHA")
             ),
             new CreateColumnRequest(
-                ProfileId:   profileId,
                 Slug:        "beauty-from-within",
                 Title:       "Beauty From Within",
                 Summary:     "Skin, hair, and nails: how diet and habits affect your look.",
@@ -293,7 +290,6 @@ public static class SeedData
                 TaxonomyIds: GetTaxIds("Beauty", "Diet")
             ),
             new CreateColumnRequest(
-                ProfileId:   profileId,
                 Slug:        "omega-3-and-dha-guide",
                 Title:       "A Quick Guide to Omega-3 & DHA",
                 Summary:     "Why DHA matters and the best ways to get enough.",

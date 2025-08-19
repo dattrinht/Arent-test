@@ -16,7 +16,6 @@ internal class ColumnRepository : IColumnRepository
         var entity = new Column
         {
             Id = IdGenHelper.CreateId(),
-            ProfileId = dto.ProfileId,
             Slug = dto.Slug.Trim().ToLower(),
             Title = dto.Title.Trim(),
             Summary = dto.Summary,
@@ -40,7 +39,6 @@ internal class ColumnRepository : IColumnRepository
         var associations = validTaxonomyIds
             .ConvertAll(taxonomyId => new ColumnTaxonomyAssociation
             {
-                ProfileId = entity.ProfileId,
                 ColumnId = entity.Id,
                 TaxonomyId = taxonomyId,
                 CreatedAt = now,
@@ -149,36 +147,35 @@ internal class ColumnRepository : IColumnRepository
     }
 
     public async Task<(IReadOnlyList<ColumnSummaryDto> Items, int TotalCount)> FetchAsync(
-        long profileId,
-        EnumTaxonomyType? category,
+        long? categoryId,
         int page = 1,
         int pageSize = 20,
         CancellationToken ct = default
     )
     {
-        var filteredQuery = from c in _dbContext.Columns
-                    join a in _dbContext.ColumnTaxonomyAssociations
-                    on c.Id equals a.ColumnId into ca
-                    from a in ca.DefaultIfEmpty()
-                    join t in _dbContext.ColumnTaxonomies
-                    on a.TaxonomyId equals t.Id into tat
-                    from t in tat.DefaultIfEmpty()
-                    where c.ProfileId == profileId
-                        && !c.IsDeleted
-                        && !t.IsDeleted
-                        && (category == null || (t != null && t.Type == category.Value))
-                    select c;
+        var filteredIdsQuery =
+        (
+            from c in _dbContext.Columns
+            join a in _dbContext.ColumnTaxonomyAssociations 
+            on c.Id equals a.ColumnId into ca
+            from a in ca.DefaultIfEmpty()
+            join t in _dbContext.ColumnTaxonomies 
+            on a.TaxonomyId equals t.Id into tat
+            from t in tat.DefaultIfEmpty()
+            where  !c.IsDeleted
+                && c.IsPublished
+                && (categoryId == null 
+                    || (t != null && !t.IsDeleted && t.Id == categoryId.Value)
+                )
+            select c.Id
+         ).Distinct();
 
-        var total = await filteredQuery.CountAsync(ct);
+        var total = await filteredIdsQuery.CountAsync(ct);
 
         if (total == 0)
         {
             return (Array.Empty<ColumnSummaryDto>(), 0);
         }
-
-        var orderedQuery = from c in filteredQuery
-            orderby (c.PublishedAt ?? c.CreatedAt) descending, c.Id descending
-            select c;
 
         // sanitize paging
         if (page < 1) page = 1;
@@ -187,7 +184,18 @@ internal class ColumnRepository : IColumnRepository
         if (pageSize > MaxPageSize) pageSize = MaxPageSize;
         var skip = (page - 1) * pageSize;
 
-        var result = await orderedQuery
+        var orderedIds = await _dbContext.Columns
+            .Where(c => filteredIdsQuery.Contains(c.Id))
+            .OrderByDescending(c => c.PublishedAt ?? c.CreatedAt)
+            .ThenByDescending(c => c.Id)
+            .Select(c => c.Id)
+            .Skip(skip)
+            .Take(pageSize)
+            .ToListAsync(ct);
+
+        var pageItems = await _dbContext.Columns
+            .AsNoTracking()
+            .Where(c => orderedIds.Contains(c.Id))
             .Select(c => new ColumnSummaryDto(
                 c.Id,
                 c.Slug,
@@ -196,33 +204,41 @@ internal class ColumnRepository : IColumnRepository
                 c.DisplayImage,
                 c.IsPublished,
                 c.CreatedAt,
-                c.PublishedAt
+                c.PublishedAt,
+                null
             ))
-            .Skip(skip)
-            .Take(pageSize)
             .ToListAsync(ct);
 
-        var columnIds = result.ConvertAll(x => x.Id);
-        var taxonomyQuery = from a in _dbContext.ColumnTaxonomyAssociations
-                         join t in _dbContext.ColumnTaxonomies
-                         on a.TaxonomyId equals t.Id
-                         where !t.IsDeleted
-                            && columnIds.Contains(a.ColumnId)
-                            select new
-                            {
-                                a.ColumnId,
-                                TaxonomyDto = new ColumnTaxonomySummaryDto(t.Id, t.Name, t.Type)
-                            };
-
-        var columnTaxnomoies = await taxonomyQuery
-            .AsNoTracking()
+        var itemsById = pageItems.ToDictionary(x => x.Id);
+        var taxonomyRows = await (
+            from a in _dbContext.ColumnTaxonomyAssociations.AsNoTracking()
+            join t in _dbContext.ColumnTaxonomies.AsNoTracking() on a.TaxonomyId equals t.Id
+            where !t.IsDeleted && orderedIds.Contains(a.ColumnId)
+            select new
+            {
+                a.ColumnId,
+                Taxonomy = new ColumnTaxonomySummaryDto(t.Id, t.Name, t.Type)
+            })
             .ToListAsync(ct);
 
-        foreach (var item in result)
+        var taxByColumn = taxonomyRows
+            .GroupBy(x => x.ColumnId)
+            .ToDictionary(g => 
+                g.Key, 
+                g => g.Select(x => x.Taxonomy).ToList()
+            );
+
+        var result = new List<ColumnSummaryDto>(orderedIds.Count);
+
+        foreach (var id in orderedIds)
         {
-            item.Taxonomies = [.. columnTaxnomoies
-                .Where(x => x.ColumnId == item.Id)
-                .Select(x => x.TaxonomyDto)];
+            if (!itemsById.TryGetValue(id, out var item)) continue;
+
+            var itemTaxonomies = taxByColumn.TryGetValue(id, out var list)
+                ? list
+                : [];
+
+            result.Add(item with { Taxonomies = itemTaxonomies });
         }
 
         return (result, total);
@@ -257,7 +273,6 @@ internal class ColumnRepository : IColumnRepository
 
         var result = new ColumnDetailDto(
             entity.Id,
-            entity.ProfileId,
             entity.Slug,
             entity.Title,
             entity.Summary,

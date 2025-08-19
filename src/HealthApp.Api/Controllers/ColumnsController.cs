@@ -35,6 +35,7 @@ public sealed class ColumnsController : ControllerBase
     }
 
     [HttpGet("{id:long}")]
+    [AllowAnonymous]
     public async Task<ActionResult<ColumnDetailDto>> GetById([FromRoute] long id, CancellationToken ct)
     {
         var result = await _columnService.FindByIdAsync(id, ct);
@@ -43,6 +44,7 @@ public sealed class ColumnsController : ControllerBase
     }
 
     [HttpGet("slug/{slug}")]
+    [AllowAnonymous]
     public async Task<ActionResult<ColumnDetailDto>> GetBySlug([FromRoute] string slug, CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(slug)) return BadRequest("Slug is required.");
@@ -52,15 +54,15 @@ public sealed class ColumnsController : ControllerBase
     }
 
     [HttpGet("fetch")]
+    [AllowAnonymous]
     public async Task<ActionResult<PagingResult<ColumnSummaryDto>>> Get(
-        [FromQuery] long profileId,
-        [FromQuery] EnumTaxonomyType? category,
+        [FromQuery] long? categoryId,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20,
         CancellationToken ct = default
     )
     {
-        var (items, total) = await _columnService.FetchAsync(profileId, category, page, pageSize, ct);
+        var (items, total) = await _columnService.FetchAsync(categoryId, page, pageSize, ct);
         return PagingResult<ColumnSummaryDto>.Create(items, total, page, pageSize);
     }
 }

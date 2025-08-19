@@ -3,16 +3,13 @@
 internal class ColumnService : IColumnService
 {
     private readonly IColumnRepository _columnRepository;
-    private readonly IProfileRepository _profileRepository;
     private readonly ILogger<ColumnService> _logger;
 
     public ColumnService(
         IColumnRepository columnRepository,
-        IProfileRepository profileRepository,
         ILogger<ColumnService> logger)
     {
         _columnRepository = columnRepository;
-        _profileRepository = profileRepository;
         _logger = logger;
     }
 
@@ -20,11 +17,8 @@ internal class ColumnService : IColumnService
     {
         ArgumentNullException.ThrowIfNull(req);
 
-        var profile = await _profileRepository.FindByIdAsync(req.ProfileId, ct) ?? throw new InvalidOperationException($"Profile {req.ProfileId} does not exist.");
-
         var dto = new ColumnDetailDto(
             Id: 0,
-            ProfileId: req.ProfileId,
             Slug: (req.Slug ?? string.Empty).Trim().ToLowerInvariant(),
             Title: (req.Title ?? string.Empty).Trim(),
             Summary: req.Summary ?? string.Empty,
@@ -41,9 +35,9 @@ internal class ColumnService : IColumnService
 
         var entity = await _columnRepository.CreateAsync(dto, ct);
 
-        _logger.LogInformation("Column created: {ColumnId} ({Slug}) for profile {ProfileId}", entity.Id, entity.Slug, profile.Id);
+        _logger.LogInformation("Column created: {ColumnId} ({Slug})}", entity.Id, entity.Slug);
 
-        return new CreateColumnResponse(entity.Id, entity.ProfileId);
+        return new CreateColumnResponse(entity.Id);
     }
 
     public async Task<ColumnDetailDto?> UpdateAsync(long id, UpdateColumnRequest req, CancellationToken ct = default)
@@ -52,7 +46,6 @@ internal class ColumnService : IColumnService
 
         var dto = new ColumnDetailDto(
             Id: id,
-            ProfileId: default,    // ignored by repo
             Slug: (req.Slug ?? string.Empty).Trim().ToLowerInvariant(),
             Title: (req.Title ?? string.Empty).Trim(),
             Summary: req.Summary ?? string.Empty,
@@ -82,9 +75,14 @@ internal class ColumnService : IColumnService
         return ok;
     }
 
-    public async Task<(IReadOnlyList<ColumnSummaryDto> Items, int TotalCount)> FetchAsync(long profileId, EnumTaxonomyType? category, int page = 1, int pageSize = 20, CancellationToken ct = default)
+    public async Task<(IReadOnlyList<ColumnSummaryDto> Items, int TotalCount)> FetchAsync(
+        long? categoryId,
+        int page = 1,
+        int pageSize = 20,
+        CancellationToken ct = default
+    )
     {
-        var result = await _columnRepository.FetchAsync(profileId, category, page, pageSize, ct);
+        var result = await _columnRepository.FetchAsync(categoryId, page, pageSize, ct);
         return result;
     }
 

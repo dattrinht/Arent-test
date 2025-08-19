@@ -1,7 +1,6 @@
 ﻿namespace HealthApp.Application.Features.Columns.Models;
 
 public sealed record CreateColumnRequest(
-    [Required] long ProfileId,
     [Required, StringLength(256)] string Slug,
     [Required, StringLength(512)] string Title,
     [StringLength(4000)] string? Summary,

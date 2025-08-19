@@ -2,9 +2,6 @@
 
 public class ColumnTaxonomy : Entity
 {
-    [Required]
-    public long ProfileId { get; set; }
-
     [Required, StringLength(256)]
     public string Name { get; set; } = null!;
 

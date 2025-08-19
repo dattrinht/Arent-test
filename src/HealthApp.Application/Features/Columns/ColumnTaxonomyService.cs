@@ -26,7 +26,6 @@ internal class ColumnTaxonomyService : IColumnTaxonomyService
         var entity = new ColumnTaxonomy
         {
             Id = IdGenHelper.CreateId(),
-            ProfileId = req.ProfileId,
             Name = req.Name,
             Type = req.Type,
             CreatedAt = now,
@@ -35,9 +34,9 @@ internal class ColumnTaxonomyService : IColumnTaxonomyService
         };
 
         await _columnTaxonomyRepository.SaveAsync(entity, ct);
-        _logger.LogInformation("ColumnTaxonomy created: {ColumnTaxonomyId} for profile {ProfileId}", entity.Id, entity.ProfileId);
+        _logger.LogInformation("ColumnTaxonomy created: {ColumnTaxonomyId}", entity.Id);
 
-        return new CreateColumnTaxonomyResponse(entity.Id, entity.ProfileId);
+        return new CreateColumnTaxonomyResponse(entity.Id);
     }
 
     public async Task<(IReadOnlyList<ColumnTaxonomySummaryDto> Items, int TotalCount)> FetchByProfileAsync(
@@ -47,7 +46,7 @@ internal class ColumnTaxonomyService : IColumnTaxonomyService
         CancellationToken ct = default
     )
     {
-        var spec = new ColumnTaxonomyByProfileIdPagingSpec(profileId, page, pageSize);
+        var spec = new ColumnTaxonomyByProfileIdPagingSpec(page, pageSize);
         var result = await _columnTaxonomyRepository.FetchByProfileIdAsync(spec, ct);
         return result;
     }

@@ -1,3 +1,3 @@
 ﻿namespace HealthApp.Application.Features.Columns.Models;
 
-public sealed record CreateColumnTaxonomyResponse(long Id, long ProfileId);
+public sealed record CreateColumnTaxonomyResponse(long Id);

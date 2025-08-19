@@ -2,9 +2,6 @@
 
 public class Column : Entity
 {
-    [Required]
-    public long ProfileId { get; set; }
-
     [Required, StringLength(256)]
     public required string Slug { get; set; }
 

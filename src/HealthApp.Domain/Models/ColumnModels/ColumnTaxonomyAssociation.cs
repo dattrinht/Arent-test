@@ -2,9 +2,6 @@
 
 public class ColumnTaxonomyAssociation
 {
-    [Required]
-    public long ProfileId { get; set; }
-
     public long Id { get; set; }
 
     [Required]

@@ -2,7 +2,6 @@
 
 public record ColumnDetailDto(
     long Id,
-    long ProfileId,
     string Slug,
     string Title,
     string Summary,
