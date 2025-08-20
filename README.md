@@ -485,6 +485,77 @@ docker compose --profile local --env-file .\.env.Development up -d
 docker compose --profile all --env-file .\.env.Development down
 ```
 
+## ✅ Verification
+
+#### 1. Ensure Services Are Running
+
+Check that Docker services (PostgreSQL and Redis) are up:
+
+```bash
+docker compose ps
+```
+
+#### 2. Verify API is Reachable
+
+Open your browser and navigate to:
+- Swagger UI: http://localhost:5292/swagger/index.html
+
+You should see a list of available API endpoints.
+
+<img width="1684" height="1206" alt="image" src="https://github.com/user-attachments/assets/fadc49df-c4c4-4910-8603-6edc41f7c1cb" />
+
+#### 3. Test Authentication
+
+Use Swagger to test login:
+
+- `POST /identities/login` with a test user (or create one manually)
+  
+<img width="1782" height="1436" alt="image" src="https://github.com/user-attachments/assets/49e86f5a-30ef-4b7a-adac-51ad1162f657" />
+
+- Copy the `accessToken` from the response and set it using Swagger's "Authorize" button to authenticate subsequent requests.
+
+<img width="1668" height="820" alt="image" src="https://github.com/user-attachments/assets/5bb09b42-95e5-4b92-a389-483bebee6c5e" />
+
+#### 4. Test fetch Profiles
+
+- `GET /profiles/fetch` with the `userId` from `login endpoint:
+- Copy the `id` from the response using it for subsequent requests.
+
+<img width="1872" height="1362" alt="image" src="https://github.com/user-attachments/assets/58c1f3d9-d799-4cf0-94b6-6c2e769ff140" />
+  
+#### 5. Test a Sample API
+
+Example: Fetch top page meal history:
+- `GET /meals/fetch?profileId=82657431905112064&type=1&page=1&pageSize=20`
+- Expect to receive a JSON response with items array.
+
+<img width="1842" height="1428" alt="image" src="https://github.com/user-attachments/assets/dec55eb0-95d3-4cdc-95f3-457acf8fac80" />
+
+#### 5. Check Database
+
+- To connect to the running PostgreSQL container, use the following command:
+  
+```bash
+docker exec -it healthapp-postgres psql -U root -d postgres
+```
+
+- Data is automatically seeded during application startup via `SeedData.cs`
+- To view all tables in the healthapp schema:
+
+```bash
+\dt healthapp.*
+```
+
+<img width="695" height="294" alt="image" src="https://github.com/user-attachments/assets/18b2212d-76bf-4f2d-859e-f12821163598" />
+
+- To query data from the a table, `meals` for example:
+
+```bash
+SELECT * FROM healthapp.meals;
+```
+
+<img width="2775" height="1313" alt="image" src="https://github.com/user-attachments/assets/560127ca-924a-433f-9507-c697b242b072" />
+
 ## **⏱️ Time Spent**
 
 | Phase               | Description                                                                                   | Time Spent |
@@ -510,3 +581,4 @@ The current implementation serves the core functionalities well, but there are o
 - Improve automated test coverage, especially for edge cases and failure scenarios.
 - Add metrics and health check endpoints to support monitoring and observability.
 - Make configuration (e.g., pagination defaults, API limits) more customizable via app settings or environment variables.
+
