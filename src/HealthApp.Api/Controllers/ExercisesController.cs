@@ -56,7 +56,7 @@ public sealed class ExercisesController : ControllerBase
         return result;
     }
 
-    [HttpGet("/achievement")]
+    [HttpGet("achievement")]
     public async Task<ActionResult<ExerciseAchievementDto>> GetAchievementByDate(
         [FromQuery] long profileId,
         [FromQuery] DateOnly day,

@@ -25,5 +25,6 @@ public sealed class MealsByProfileIdPagingSpec
             m.DoneAt
         );
         OrderBy = m => m.Id;
+        OrderByDescending = m => m.DoneAt;
     }
 }

@@ -85,7 +85,7 @@ public static class SeedData
 
             var type = name switch
             {
-                "Omelette" or "Porridge" or "Fruit Bowl" => EnumMealType.Breakfast,
+                "Omelette" or "Porridge" or "Fruit Bowl" => EnumMealType.Morning,
                 "Salad" or "Sandwich" => EnumMealType.Lunch,
                 "Pizza" or "Sushi" or "Steak" or "Curry" => EnumMealType.Dinner,
                 _ => EnumMealType.Other

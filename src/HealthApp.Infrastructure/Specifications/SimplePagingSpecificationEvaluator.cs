@@ -17,7 +17,7 @@ internal static class SimplePagingSpecificationEvaluator
 
         if (spec.OrderBy is not null)
             query = query.OrderBy(spec.OrderBy);
-        else if (spec.OrderByDescending is not null)
+        if (spec.OrderByDescending is not null)
             query = query.OrderByDescending(spec.OrderByDescending);
 
         if (spec.IsPagingEnabled)
