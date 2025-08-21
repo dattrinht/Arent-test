@@ -455,7 +455,7 @@ You can run the Health Management Backend either using Docker for containerized 
 3. Build Docker images:
 
 ```bash
-docker compose --profile postgres --env-file .\.env.Development build
+docker compose --profile all --env-file .\.env.Development build
 ```
 
 4. Run the application:
@@ -581,4 +581,5 @@ The current implementation serves the core functionalities well, but there are o
 - Improve automated test coverage, especially for edge cases and failure scenarios.
 - Add metrics and health check endpoints to support monitoring and observability.
 - Make configuration (e.g., pagination defaults, API limits) more customizable via app settings or environment variables.
+
 
